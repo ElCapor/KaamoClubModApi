@@ -1,0 +1,39 @@
+set_arch("x86")
+add_requires("lua", {configs = {arch = "x86"}})
+add_requires("sol2", {configs = {arch = "x86"}})
+
+target("proxydll")
+    set_kind("phony")
+    
+    on_build(function (target)
+        import("core.project.config")        
+        local mode = "release"
+        
+        local args = {"build"}
+        if mode == "release" then
+            table.insert(args, "--release")
+        end
+        
+        os.vrunv("cargo", args, {curdir = "proxydll"})                
+        os.cp("proxydll/target/i686-pc-windows-msvc/release/d3d9.dll", "build")
+    end)
+    
+    on_clean(function (target)
+        os.vrunv("cargo", {"clean"}, {curdir = "proxydll"})
+        os.tryrm("build/d3d9.dll")
+    end)
+
+target("kaamoclubmodapi")
+    set_kind("shared")
+    add_files("modapi/src/*.cpp")
+    add_files("modapi/src/Game/*.cpp")
+    add_includedirs("modapi/include")
+    add_packages("lua", "sol2")
+    add_syslinks("user32")
+    set_languages("c++20")
+
+    on_clean(function (target)
+        os.tryrm("build/.deps")
+        os.tryrm("build/.objs")
+        os.tryrm("build/windows")
+    end)
