@@ -1,0 +1,37 @@
+name: Build
+
+on:
+  push:
+    branches: [ main, master ]
+  pull_request:
+    branches: [ main, master ]
+
+jobs:
+  build:
+    runs-on: windows-latest
+
+    steps:
+    - uses: actions/checkout@v4
+
+    - name: Setup xmake
+      uses: xmake-io/github-action-setup-xmake@v1
+      with:
+        xmake-version: latest
+
+    - name: Setup Rust
+      uses: dtolnay/rust-toolchain@stable
+      with:
+        toolchain: stable
+        targets: i686-pc-windows-msvc
+
+    - name: Configure xmake
+      run: xmake f -m release -y -v
+
+    - name: Build with xmake
+      run: xmake -y -v
+
+    - name: Upload artifacts
+      uses: actions/upload-artifact@v4
+      with:
+        name: KaamoClubModApi
+        path: build

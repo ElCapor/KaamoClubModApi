@@ -10,6 +10,9 @@ target("proxydll")
         local mode = "release"
         
         local args = {"build"}
+        table.insert(args, "--target")
+        table.insert(args, "i686-pc-windows-msvc")
+        
         if mode == "release" then
             table.insert(args, "--release")
         end
@@ -32,8 +35,13 @@ target("kaamoclubmodapi")
     add_syslinks("user32")
     set_languages("c++20")
 
+    after_build(function (target)
+        os.cp(target:targetfile(), "build")
+    end)
+
     on_clean(function (target)
         os.tryrm("build/.deps")
         os.tryrm("build/.objs")
         os.tryrm("build/windows")
+        os.tryrm("build/kaamoclubmodapi.dll")
     end)
