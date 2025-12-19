@@ -1,6 +1,7 @@
 set_arch("x86")
 add_requires("lua", {configs = {arch = "x86"}})
 add_requires("sol2", {configs = {arch = "x86"}})
+add_requires("minhook", {configs = {arch = "x86"}})
 
 target("proxydll")
     set_kind("phony")
@@ -31,7 +32,7 @@ target("kaamoclubmodapi")
     add_files("modapi/src/*.cpp")
     add_files("modapi/src/Game/*.cpp")
     add_includedirs("modapi/include")
-    add_packages("lua", "sol2")
+    add_packages("lua", "sol2", "minhook")
     add_syslinks("user32")
     set_languages("c++20")
 
