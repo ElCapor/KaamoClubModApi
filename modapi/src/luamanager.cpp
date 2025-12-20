@@ -77,8 +77,13 @@ void LuaManager::bind_api()
         "id", sol::property(&Station::getid, &Station::setid),
         "name", sol::property(&Station::getname, &Station::setname),
         "level", sol::property(&Station::gettechlevel, &Station::settechlevel),
+        "angaritemscount", sol::property(&Station::getangaritemscount, &Station::setangaritemscount),
+        "angarshipscount", sol::property(&Station::getangarshipscount, &Station::setangarshipscount),
         "IsVoid", [](Station& self) -> bool {
             return Station::isvoid();
+        },
+        "SetAngarShipId", [](Station& self, int id, int value) {
+            Station::setangarshipid(id, value);
         }
     );
 

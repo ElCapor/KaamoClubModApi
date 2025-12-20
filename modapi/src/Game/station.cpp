@@ -52,3 +52,35 @@ bool Station::isvoid(void)
         return true;
     return false;
 }
+
+int Station::getangaritemscount()
+{
+    uintptr_t finaladdr = MemoryUtils::GetPointerAddress(globals_status, {0x160, 0x24, 0x0});
+    return MemoryUtils::Read<int>(finaladdr);
+}
+
+void Station::setangaritemscount(int value)
+{
+    uintptr_t finaladdr = MemoryUtils::GetPointerAddress(globals_status, {0x160, 0x24, 0x0});
+    MemoryUtils::Write<int>(finaladdr, value);
+}
+
+int Station::getangarshipscount()
+{
+    uintptr_t finaladdr = MemoryUtils::GetPointerAddress(globals_status, {0x160, 0x28, 0x0});
+    return MemoryUtils::Read<int>(finaladdr);
+}
+
+void Station::setangarshipscount(int value)
+{
+    uintptr_t finaladdr = MemoryUtils::GetPointerAddress(globals_status, {0x160, 0x28, 0x0});
+    MemoryUtils::Write<int>(finaladdr, value);
+}
+
+void Station::setangarshipid(int id, int value)
+{
+    unsigned int offset = (id == 0) ? 0 : (1 << (id + 1));
+
+    uintptr_t finaladdr = MemoryUtils::GetPointerAddress(globals_status, {0x160, 0x28, 0x4, offset, 0x0});
+    MemoryUtils::Write<int>(finaladdr, value);
+}

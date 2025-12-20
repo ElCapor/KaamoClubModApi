@@ -12,7 +12,12 @@ class Station {
         static void setname(const std::string value);
         static int gettechlevel(void);
         static void settechlevel(int value);
-        
+        static int getangaritemscount(void);
+        static void setangaritemscount(int value);
+        static int getangarshipscount(void);
+        static void setangarshipscount(int value);
+
         static bool isvoid(void);
+        static void setangarshipid(int id, int value);
 };
 #endif

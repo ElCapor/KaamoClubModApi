@@ -1,3 +1,5 @@
+-- even if some code is commented the bindings exist don't worry
+
 isingame = false
 assetchanged = false
 
@@ -34,6 +36,9 @@ end)
 
 RegisterEvent("OnStationDocked", function()
 	print("Docked on this station: " .. station.name)
+	--local randomship = math.random(1,29)
+	--print("Setting the first ship of the angar to : " .. randomship)
+	--station:SetAngarShipId(0, randomship)
 end)
 
 RegisterEvent("IsInMainMenu", function()
@@ -62,6 +67,8 @@ RegisterEvent("OnSystemChanged", function(id)
 	print("Station name : " .. station.name)
 	print("Station level : " .. station.level)
 	print("Station id : " .. station.id)
+	print("Station angar items count : " .. station.angaritemscount)
+	print("Station angar ships count : " .. station.angarshipscount)
 	print("Ship cargo : " .. player.cargo)
 	print("Ship maxcargo : " .. player.maxcargo)
 	print("Ship armor : " .. player.armor)

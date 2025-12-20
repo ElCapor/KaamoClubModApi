@@ -22,8 +22,6 @@ DWORD WINAPI MainThread(LPVOID lpParam) {
     luamanager->init();
     luamanager->bind_api();
     ModApiUtils::load_mods(luamanager);
-    //System::create(L"test", 80, 30, 47);
-    //System::create(L"test blabla", 80, 50, 50);
     EventManager::earlyinit_event();
     Hooks::init();
     while (true)
