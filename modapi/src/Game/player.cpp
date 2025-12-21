@@ -126,13 +126,13 @@ void Player::setjumpgateusedcount(int value)
     MemoryUtils::Write<int>(finaladdr, value);
 }
 
-int Player::getcargotookcount()
+int Player::getcargosalvagedcount()
 {
     uintptr_t finaladdr = MemoryUtils::GetPointerAddress(globals_status, {0x1A8});
     return MemoryUtils::Read<int>(finaladdr);
 }
 
-void Player::setcargotookcount(int value)
+void Player::setcargosalvagedcount(int value)
 {
     uintptr_t finaladdr = MemoryUtils::GetPointerAddress(globals_status, {0x1A8});
     MemoryUtils::Write<int>(finaladdr, value);
@@ -146,4 +146,16 @@ bool Player::isdocked(void)
     if (isdocked == 5)
         return true;
     return false;
+}
+
+int Player::getasteroidsdestroyedcount()
+{
+    uintptr_t finaladdr = MemoryUtils::GetPointerAddress(globals_status, {0xB8});
+    return MemoryUtils::Read<int>(finaladdr);
+}
+
+void Player::setasteroidsdestroyedcount(int value)
+{
+    uintptr_t finaladdr = MemoryUtils::GetPointerAddress(globals_status, {0xB8});
+    MemoryUtils::Write<int>(finaladdr, value);
 }

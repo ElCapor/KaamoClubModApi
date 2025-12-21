@@ -4,6 +4,7 @@
 #include <Game/system.h>
 
 Hooks::globals_init Hooks::oldglobals_init = nullptr;
+Hooks::fileread_loadstationbinaryfromid Hooks::old_filereadloadstationbinaryfromid = nullptr;
 
 void Hooks::injectsystems()
 {
@@ -74,9 +75,9 @@ void Hooks::injectsystems()
 uintptr_t __stdcall Hooks::globals_init_hook(uintptr_t a, uintptr_t b, uintptr_t c)
 {
     auto old = oldglobals_init(a, b, c);
-    static bool one = false;
-    if (!one) {
-        one = true;
+    static bool called_once = false;
+    if (!called_once) {
+        called_once = true;
         CreateThread(nullptr, 0, [](LPVOID)->DWORD {
             std::cout << "[+] Globals::init hooked successfully" << std::endl;
             Hooks::injectsystems();
@@ -86,10 +87,27 @@ uintptr_t __stdcall Hooks::globals_init_hook(uintptr_t a, uintptr_t b, uintptr_t
     return old;
 }
 
+uintptr_t __stdcall Hooks::fileread_loadstationbinaryfromid_hook(const uint16_t* a)
+{
+    //uint16_t newval = 108;
+    //auto old = old_filereadloadstationbinaryfromid(&newval);
+    auto old = old_filereadloadstationbinaryfromid(a);
+    if (a && *a > 108) {
+        std::cout << "[*] Should teleport to our custom station" << std::endl;
+        // TODO: return the array of our custom station with the specific id
+    }
+    //std::cout << "[*] FileRead::loadStationBinaryFromId ptr = " << a << std::endl;
+    //std::cout << "[*] FileRead::loadStationBinaryFromId id = " << *a << std::endl;
+
+    return old;
+}
+
 void Hooks::init()
 {
     std::cout << "[*] Starting hooks..." << std::endl;
     MH_Initialize();
     MH_CreateHook((LPVOID)GLOBALS_INIT_ADDR, &globals_init_hook, (LPVOID*)&oldglobals_init);
+    MH_CreateHook((LPVOID)FILEREAD_LOADSTATIONBINARYFROMID, &fileread_loadstationbinaryfromid_hook, (LPVOID*)&old_filereadloadstationbinaryfromid);
     MH_EnableHook((LPVOID)GLOBALS_INIT_ADDR);
+    MH_EnableHook((LPVOID)FILEREAD_LOADSTATIONBINARYFROMID);
 }

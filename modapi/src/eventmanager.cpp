@@ -18,7 +18,7 @@
 #include <Game/mission.h>
 #include <Game/asset.h>
 
-// TODO: Check if we are in the game for most of the events
+// TODO: Check if we are in the game for most of the events because there is the same bug as the ennemie killed event
 
 std::map<std::string, std::vector<sol::protected_function>> EventManager::listeners;
 
@@ -112,6 +112,17 @@ void EventManager::cargochanged_event()
     }
 }
 
+void EventManager::asteroiddestroyed_event()
+{
+    static int old = Player::getasteroidsdestroyedcount();
+    int current = Player::getasteroidsdestroyedcount();
+
+    if (current != old) {
+        trigger("OnAsteroidDestroyed", current);
+        old = current;
+    }
+}
+
 void EventManager::stationdocked_event()
 {
     static bool isdocked = false;
@@ -140,4 +151,5 @@ void EventManager::trigger_events()
     stationdocked_event();
     enemiekilled_event();
     cargochanged_event();
+    asteroiddestroyed_event();
 }
