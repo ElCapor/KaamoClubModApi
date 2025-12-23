@@ -97,7 +97,6 @@ uintptr_t __stdcall Hooks::fileread_loadstationbinaryfromid_hook(const uint16_t*
     //std::cout << *a << std::endl;
     if (a && *a > 108) {
         std::cout << "[*] Should teleport to our custom station" << std::endl;
-        Sleep(13000);
         // TODO: return the array of our custom station with the specific id
     }
     //std::cout << "[*] FileRead::loadStationBinaryFromId ptr = " << a << std::endl;
@@ -107,18 +106,28 @@ uintptr_t __stdcall Hooks::fileread_loadstationbinaryfromid_hook(const uint16_t*
 
 uintptr_t __stdcall Hooks::fileread_loadstationbinary_hook(SingleSystem* system)
 {
-    auto* old_array = reinterpret_cast<AEArray<SingleStation*>*>(old_filereadloadstationbinary(system));
+    AEArray<SingleStation*>* old_array = reinterpret_cast<AEArray<SingleStation*>*>(old_filereadloadstationbinary(system));
 
-    if (system->id != 27)
-        return reinterpret_cast<uintptr_t>(old_array);
-
-    std::cout << "[*] System id: " << system->id << std::endl;
+    //if (system->id != 27)
+    //    return reinterpret_cast<uintptr_t>(old_array);
     SingleStation* first_station = old_array->data[0];
-    if (!first_station)
-        return reinterpret_cast<uintptr_t>(old_array);
-
-    std::cout << first_station << std::endl;
-
+    if (first_station->id == 109) {
+        //AEArray<SingleStation*>* new_sts_array = (AEArray<SingleStation*>*)VirtualAlloc(nullptr, sizeof(AEArray<SingleStation*>),MEM_COMMIT | MEM_RESERVE, PAGE_READWRITE);
+        //memcpy(new_sts_array, old_array, sizeof(AEArray<SingleStation*>));
+        //new_sts_array->size = 1;
+        //new_sts_array->size2 = 1;
+        //new_sts_array->data = (SingleStation**)VirtualAlloc(nullptr, sizeof(SingleStation*) * 1, MEM_COMMIT | MEM_RESERVE, PAGE_READWRITE);
+        //memcpy(new_sts_array->data, old_array->data, sizeof(SingleStation*));
+        //SingleStation* newstsdata = (SingleStation*)VirtualAlloc(nullptr, sizeof(SingleStation), MEM_COMMIT | MEM_RESERVE, PAGE_READWRITE);
+        //memcpy(newstsdata, old_array->data[0], sizeof(SingleStation));
+        //old_array->data[0] = newstsdata;
+        //std::cout << old_array->data[0]->id << std::endl;
+        //new_sts_array->data[0] = newstsdata;
+        //std::cout << "[*] new_sts_array ptr : " << new_sts_array << std::endl;
+        std::cout << "[*] old_array ptr : " << old_array << std::endl;
+        std::cout << "[*] System id: " << system->id << std::endl;
+        //return reinterpret_cast<uintptr_t>(new_sts_array);
+    }
     return reinterpret_cast<uintptr_t>(old_array);
 }
 
