@@ -128,6 +128,7 @@ uintptr_t __stdcall Hooks::globals_init_hook(uintptr_t a, uintptr_t b, uintptr_t
     if (!called_once) {
         called_once = true;
         CreateThread(nullptr, 0, [](LPVOID)->DWORD {
+            Patches::patchmissions(100);
             Hooks::injectsystemsandstations();
             return 0;
         }, nullptr, 0, nullptr);

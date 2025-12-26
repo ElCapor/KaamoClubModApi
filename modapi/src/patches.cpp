@@ -46,3 +46,13 @@ void Patches::patchloadstations(uint8_t new_limit)
         VirtualProtect((LPVOID)addr, 1, old, &old);
     }
 }
+
+void Patches::patchmissions(uint8_t new_value)
+{
+    DWORD old;
+    uintptr_t addr = 0x0049E212;
+
+    VirtualProtect((LPVOID)addr, 1, PAGE_EXECUTE_READWRITE, &old);
+    *(uint8_t*)addr = new_value;
+    VirtualProtect((LPVOID)addr, 1, old, &old);
+}
