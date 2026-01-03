@@ -8,19 +8,18 @@
 void Player::init()
 {
     globals_status = MemoryUtils::GetModuleBase("GoF2.exe") + 0x20AD6C; // Globals::status
+    while (globals_statuss == 0) globals_statuss = *reinterpret_cast<Globals_status**>(MemoryUtils::GetModuleBase("GoF2.exe") + 0x20AD6C); // Globals::status
     globals_appmanager = MemoryUtils::GetModuleBase("GoF2.exe") + 0x20AEFC; // Globals::appManager
 }
 
 int Player::getmoney()
 {
-    uintptr_t finaladdr = MemoryUtils::GetPointerAddress(globals_status, {0x174});
-    return MemoryUtils::Read<int>(finaladdr);
+    return globals_statuss->m_nMoney;
 }
 
 void Player::setmoney(int value)
 {
-    uintptr_t finaladdr = MemoryUtils::GetPointerAddress(globals_status, {0x174});
-    MemoryUtils::Write<int>(finaladdr, value);
+    globals_statuss->m_nMoney = value;
 }
 
 int Player::getmaxcargo()
