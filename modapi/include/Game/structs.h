@@ -107,7 +107,7 @@ struct ShipInfo {
     AEArray<SingleItem>* m_pShipItems;
 };
 
-struct Globals_AppManager {
+struct Globals_appManager {
     int* m_pPaintCanvas; //PaintCanvas*
     int field_4;
     int field_8;
@@ -130,7 +130,7 @@ struct Globals_AppManager {
     int field_4C;
     int field_50;
     int field_54;
-    int field_58;
+    int m_nCurrentModule;
     int* m_pGlobalUnkStruct2; //GlobalUnkStruct2
 };
 
@@ -181,7 +181,7 @@ struct Globals_status {
     int field_AC;
     int field_B0;
     int field_B4;
-    int field_B8;
+    int m_nAsteroidsDestroyed;
     int field_BC;
     int field_C0;
     int field_C4;
@@ -241,7 +241,7 @@ struct Globals_status {
     int field_19C;
     int field_1A0;
     int field_1A4;
-    int field_1A8;
+    int m_nCargoSalvaged;
     int field_1AC;
     int m_nCurrentCampaignMission;
     int field_1B4;

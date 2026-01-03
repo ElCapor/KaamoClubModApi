@@ -41,7 +41,6 @@ void LuaManager::bind_api()
         "enemieskilled", sol::property(&Player::getenemieskilled, &Player::setenemieskilled),
         "level", sol::property(&Player::getlevel, &Player::setlevel),
         "visitedstations", sol::property(&Player::getvisitedstations, &Player::setvisitedstations),
-        "jumpgateusedcount", sol::property(&Player::getjumpgateusedcount, &Player::setjumpgateusedcount),
         "cargosalvagedcount", sol::property(&Player::getcargosalvagedcount, &Player::setcargosalvagedcount),
         "asteroidsdestroyedcount", sol::property(&Player::getasteroidsdestroyedcount, &Player::setasteroidsdestroyedcount),
         "HasShipArmor", [](Player& self) -> bool {

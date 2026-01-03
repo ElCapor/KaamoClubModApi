@@ -7,55 +7,48 @@
 
 void Player::init()
 {
-    globals_status = MemoryUtils::GetModuleBase("GoF2.exe") + 0x20AD6C; // Globals::status
-    while (globals_statuss == 0) globals_statuss = *reinterpret_cast<Globals_status**>(MemoryUtils::GetModuleBase("GoF2.exe") + 0x20AD6C); // Globals::status
-    globals_appmanager = MemoryUtils::GetModuleBase("GoF2.exe") + 0x20AEFC; // Globals::appManager
+    while (globals_status == 0) globals_status = *reinterpret_cast<Globals_status**>(MemoryUtils::GetModuleBase("GoF2.exe") + 0x20AD6C); // Globals::status
+    while (globals_appmanager == 0) globals_appmanager = *reinterpret_cast<Globals_appManager**>(MemoryUtils::GetModuleBase("GoF2.exe") + 0x20AEFC); // Globals::appManager
 }
 
 int Player::getmoney()
 {
-    return globals_statuss->m_nMoney;
+    return globals_status->m_nMoney;
 }
 
 void Player::setmoney(int value)
 {
-    globals_statuss->m_nMoney = value;
+    globals_status->m_nMoney = value;
 }
 
 int Player::getmaxcargo()
 {
-    uintptr_t finaladdr = MemoryUtils::GetPointerAddress(globals_status, {0x154, 0x0});
-    return MemoryUtils::Read<int>(finaladdr);
+    return globals_status->m_pShipInfo->m_nMaxCapacity;
 }
 
 void Player::setmaxcargo(int value)
 {
-    uintptr_t finaladdr = MemoryUtils::GetPointerAddress(globals_status, {0x154, 0x0});
-    MemoryUtils::Write<int>(finaladdr, value);
+    globals_status->m_pShipInfo->m_nMaxCapacity;
 }
 
 int Player::getcargo()
 {
-    uintptr_t finaladdr = MemoryUtils::GetPointerAddress(globals_status, {0x154, 0x10});
-    return MemoryUtils::Read<int>(finaladdr);
+    return globals_status->m_pShipInfo->m_nCurrentCapacity;
 }
 
 void Player::setcargo(int value)
 {
-    uintptr_t finaladdr = MemoryUtils::GetPointerAddress(globals_status, {0x154, 0x10});
-    MemoryUtils::Write<int>(finaladdr, value);
+    globals_status->m_pShipInfo->m_nCurrentCapacity = value;
 }
 
 int Player::getshiparmor()
 {
-    uintptr_t finaladdr = MemoryUtils::GetPointerAddress(globals_status, {0x154, 0x20});
-    return MemoryUtils::Read<int>(finaladdr);
+    return globals_status->m_pShipInfo->m_nArmor;
 }
 
 void Player::setshiparmor(int value)
 {
-    uintptr_t finaladdr = MemoryUtils::GetPointerAddress(globals_status, {0x154, 0x20});
-    MemoryUtils::Write<int>(finaladdr, value);
+    globals_status->m_pShipInfo->m_nArmor = value;
 }
 
 bool Player::hasshiparmor()
@@ -67,94 +60,67 @@ bool Player::hasshiparmor()
 
 int Player::getmaxshiphealth()
 {
-    uintptr_t finaladdr = MemoryUtils::GetPointerAddress(globals_status, {0x154, 0x4});
-    return MemoryUtils::Read<int>(finaladdr); 
+    return globals_status->m_pShipInfo->m_nMaxShipHealth;
 }
 
 void Player::setmaxshiphealth(int value)
 {
-    uintptr_t finaladdr = MemoryUtils::GetPointerAddress(globals_status, {0x154, 0x4});
-    MemoryUtils::Write<int>(finaladdr, value);
+    globals_status->m_pShipInfo->m_nMaxShipHealth = value;
 }
 
 int Player::getenemieskilled()
 {
-    uintptr_t finaladdr = MemoryUtils::GetPointerAddress(globals_status, {0x188});
-    return MemoryUtils::Read<int>(finaladdr);
+    return globals_status->m_nEnemiesKilled;
 }
 
 void Player::setenemieskilled(int value)
 {
-    uintptr_t finaladdr = MemoryUtils::GetPointerAddress(globals_status, {0x188});
-    MemoryUtils::Write<int>(finaladdr, value);
+    globals_status->m_nEnemiesKilled = value;
 }
 
 int Player::getlevel()
 {
-    uintptr_t finaladdr = MemoryUtils::GetPointerAddress(globals_status, {0x190});
-    return MemoryUtils::Read<int>(finaladdr);
+    return globals_status->m_nPlayerLevel;
 }
 
 void Player::setlevel(int value)
 {
-    uintptr_t finaladdr = MemoryUtils::GetPointerAddress(globals_status, {0x190});
-    MemoryUtils::Write<int>(finaladdr, value);
+    globals_status->m_nPlayerLevel = value;
 }
 
 int Player::getvisitedstations()
 {
-    uintptr_t finaladdr = MemoryUtils::GetPointerAddress(globals_status, {0x198});
-    return MemoryUtils::Read<int>(finaladdr);
+    return globals_status->m_nVisitedStations;
 }
 
 void Player::setvisitedstations(int value)
 {
-    uintptr_t finaladdr = MemoryUtils::GetPointerAddress(globals_status, {0x198});
-    MemoryUtils::Write<int>(finaladdr, value);
-}
-
-int Player::getjumpgateusedcount()
-{
-    uintptr_t finaladdr = MemoryUtils::GetPointerAddress(globals_status, {0x198});
-    return MemoryUtils::Read<int>(finaladdr);
-}
-
-void Player::setjumpgateusedcount(int value)
-{
-    uintptr_t finaladdr = MemoryUtils::GetPointerAddress(globals_status, {0x198});
-    MemoryUtils::Write<int>(finaladdr, value);
+    globals_status->m_nVisitedStations = value;
 }
 
 int Player::getcargosalvagedcount()
 {
-    uintptr_t finaladdr = MemoryUtils::GetPointerAddress(globals_status, {0x1A8});
-    return MemoryUtils::Read<int>(finaladdr);
+    return globals_status->m_nCargoSalvaged;
 }
 
 void Player::setcargosalvagedcount(int value)
 {
-    uintptr_t finaladdr = MemoryUtils::GetPointerAddress(globals_status, {0x1A8});
-    MemoryUtils::Write<int>(finaladdr, value);
+    globals_status->m_nCargoSalvaged = value;
 }
 
 bool Player::isdocked(void)
 {
-    uintptr_t finaladdr = MemoryUtils::GetPointerAddress(globals_appmanager, {0x58});
-    int isdocked = MemoryUtils::Read<int>(finaladdr);
-
-    if (isdocked == 5)
+    if (globals_appmanager->m_nCurrentModule == 5)
         return true;
     return false;
 }
 
 int Player::getasteroidsdestroyedcount()
 {
-    uintptr_t finaladdr = MemoryUtils::GetPointerAddress(globals_status, {0xB8});
-    return MemoryUtils::Read<int>(finaladdr);
+    return globals_status->m_nAsteroidsDestroyed;
 }
 
 void Player::setasteroidsdestroyedcount(int value)
 {
-    uintptr_t finaladdr = MemoryUtils::GetPointerAddress(globals_status, {0xB8});
-    MemoryUtils::Write<int>(finaladdr, value);
+    globals_status->m_nAsteroidsDestroyed = value;
 }
