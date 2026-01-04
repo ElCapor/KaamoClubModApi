@@ -15,7 +15,7 @@ void Mission::init()
     while (globals_status == nullptr) {
         globals_status = *reinterpret_cast<Globals_status**>(base + 0x20AD6C); // Globals::status
         if (globals_status == nullptr)
-            std::this_thread::sleep_for(std::chrono::milliseconds(100));
+            std::this_thread::sleep_for(std::chrono::milliseconds(1000));
     }
     auto end = std::chrono::high_resolution_clock::now();
     auto duration = std::chrono::duration_cast<std::chrono::milliseconds>(end - start).count();
