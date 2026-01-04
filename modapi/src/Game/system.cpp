@@ -25,76 +25,106 @@ void System::init()
 
 int System::getid()
 {
+    if (globals_status->m_pSystemInfo == nullptr)
+        return 0;
     return globals_status->m_pSystemInfo->id;
 }
 
 void System::setid(int value)
 {
+    if (globals_status->m_pSystemInfo == nullptr)
+        return;
     globals_status->m_pSystemInfo->id = value;
 }
 
 int System::getrisklevel()
 {
+    if (globals_status->m_pSystemInfo == nullptr)
+        return 0;
     return globals_status->m_pSystemInfo->risk;
 }
 
 void System::setrisklevel(int value)
 {
+    if (globals_status->m_pSystemInfo == nullptr)
+        return;
     globals_status->m_pSystemInfo->risk = value;
 }
 
 int System::getfaction(void)
 {
+    if (globals_status->m_pSystemInfo == nullptr)
+        return 0;
     return globals_status->m_pSystemInfo->faction;
 }
 
 void System::setfaction(int value)
 {
+    if (globals_status->m_pSystemInfo == nullptr)
+        return;
     globals_status->m_pSystemInfo->faction = value;
 }
 
 int System::getjumpgatestationid(void)
 {
+    if (globals_status->m_pSystemInfo == nullptr)
+        return 0;
     return globals_status->m_pSystemInfo->jumpgate_station_id;
 }
 
 void System::setjumpgatestationid(int value)
 {
+    if (globals_status->m_pSystemInfo == nullptr)
+        return;
     globals_status->m_pSystemInfo->jumpgate_station_id = value;
 }
 
 int System::getmapcoordinatex(void)
 {
+    if (globals_status->m_pSystemInfo == nullptr)
+        return 0;
     return globals_status->m_pSystemInfo->pos.x;
 }
 
 void System::setmapcoordinatex(int value)
 {
+    if (globals_status->m_pSystemInfo == nullptr)
+        return;
     globals_status->m_pSystemInfo->pos.x = value;
 }
 
 int System::getmapcoordinatey(void)
 {
+    if (globals_status->m_pSystemInfo == nullptr)
+        return 0;
     return globals_status->m_pSystemInfo->pos.y;
 }
 
 void System::setmapcoordinatey(int value)
 {
+    if (globals_status->m_pSystemInfo == nullptr)
+        return;
     globals_status->m_pSystemInfo->pos.y = value;
 }
 
 int System::getmapcoordinatez(void)
 {
+    if (globals_status->m_pSystemInfo == nullptr)
+        return 0;
     return globals_status->m_pSystemInfo->pos.z;
 }
 
 void System::setmapcoordinatez(int value)
 {
+    if (globals_status->m_pSystemInfo == nullptr)
+        return;
     globals_status->m_pSystemInfo->pos.z = value;
 }
 
 std::string System::getname()
 {
+    if (globals_status->m_pSystemInfo == nullptr)
+        return "";
     uintptr_t strptr = reinterpret_cast<uintptr_t>(globals_status->m_pSystemInfo->name.text);
 
     return MemoryUtils::ReadWideString(strptr);
@@ -102,6 +132,8 @@ std::string System::getname()
 
 void System::setname(std::string value)
 {
+    if (globals_status->m_pSystemInfo == nullptr)
+        return;
     uintptr_t strptr = reinterpret_cast<uintptr_t>(globals_status->m_pSystemInfo->name.text);
 
     MemoryUtils::WriteWideString(strptr, value);
@@ -138,11 +170,15 @@ int System::create(const std::string& str, int x, int y, int z, int faction, int
 
 bool System::isvisible(int systemid)
 {
+    if (globals_status->m_pSystemVisibilities == nullptr)
+        return false;
     return reinterpret_cast<uint8_t*>(globals_status->m_pSystemVisibilities->data)[systemid] == 1;
 }
 
 void System::setvisible(int systemid, bool visible)
 {
+    if (globals_status->m_pSystemVisibilities == nullptr)
+        return;
     uint8_t* data = reinterpret_cast<uint8_t*>(globals_status->m_pSystemVisibilities->data);    
     data[systemid] = (uint8_t)visible;
 }

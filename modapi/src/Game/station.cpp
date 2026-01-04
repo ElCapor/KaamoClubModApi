@@ -25,31 +25,43 @@ void Station::init()
 
 int Station::getid()
 {
+    if (globals_status->m_pStationInfo == nullptr)
+        return 0;
     return globals_status->m_pStationInfo->id;
 }
 
 void Station::setid(int value)
 {
+    if (globals_status->m_pStationInfo == nullptr)
+        return;
     globals_status->m_pStationInfo->id = value;
 }
 
 std::string Station::getname()
 {
+    if (globals_status->m_pStationInfo->name.text == nullptr)
+        return "";
     return MemoryUtils::ReadWideString(reinterpret_cast<uintptr_t>(globals_status->m_pStationInfo->name.text));
 }
 
 void Station::setname(const std::string value)
 {
+    if (globals_status->m_pStationInfo->name.text == nullptr)
+        return;
     MemoryUtils::WriteWideString(reinterpret_cast<uintptr_t>(globals_status->m_pStationInfo->name.text), value);
 }
 
 int Station::gettechlevel()
 {
+    if (globals_status->m_pStationInfo == nullptr)
+        return 0;
     return globals_status->m_pStationInfo->techlevel;
 }
 
 void Station::settechlevel(int value)
 {
+    if (globals_status->m_pStationInfo == nullptr)
+        return;
     globals_status->m_pStationInfo->techlevel = value;
 }
 
@@ -69,25 +81,31 @@ int Station::getangaritemscount()
 
 void Station::setangaritemscount(int value)
 {
+    if (globals_status->m_pStationInfo->m_pItemsInAngar == nullptr)
+        return;
     globals_status->m_pStationInfo->m_pItemsInAngar->size = value;
     globals_status->m_pStationInfo->m_pItemsInAngar->size2 = value;
 }
 
 int Station::getangarshipscount()
 {
-    if (globals_status->m_pStationInfo->m_pAgents == nullptr)
+    if (globals_status->m_pStationInfo->m_pShipsInAngar == nullptr)
         return 0;
     return globals_status->m_pStationInfo->m_pShipsInAngar->size;
 }
 
 void Station::setangarshipscount(int value)
 {
+    if (globals_status->m_pStationInfo->m_pShipsInAngar == nullptr)
+        return;
     globals_status->m_pStationInfo->m_pShipsInAngar->size = value;
     globals_status->m_pStationInfo->m_pShipsInAngar->size2 = value;
 }
 
 void Station::setangarshipid(int id, int value)
 {
+    if (globals_status->m_pStationInfo->m_pShipsInAngar == nullptr)
+        return;
     unsigned int offset = (id == 0) ? 0 : (1 << (id + 1));
     auto* shipsarray = globals_status->m_pStationInfo->m_pShipsInAngar;
     uint8_t* arraydata = reinterpret_cast<uint8_t*>(shipsarray->data);
@@ -106,6 +124,8 @@ int Station::getagentscount()
 
 void Station::setagentscount(int value)
 {
+    if (globals_status->m_pStationInfo->m_pAgents == nullptr)
+        return;
     globals_status->m_pStationInfo->m_pAgents->size = value;
     globals_status->m_pStationInfo->m_pAgents->size2 = value;
 }
