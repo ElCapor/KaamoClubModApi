@@ -99,11 +99,11 @@ void LuaManager::bind_api()
 
     lua_state.new_usertype<Asset>("Asset",
         sol::no_constructor,
-        "GetAssetFilePath", [](Asset& self, unsigned int offset) -> std::string {
-            return Asset::getassetfilepath(offset);
+        "GetAssetFilePath", [](Asset& self, unsigned int id) -> std::string {
+            return Asset::getassetfilepath(id);
         },
-        "SetAssetFilePath", [](Asset& self, unsigned int offset, const std::string filepath) {
-            Asset::setassetfilepath(offset, filepath);
+        "SetAssetFilePath", [](Asset& self, unsigned int id, const std::string filepath) {
+            Asset::setassetfilepath(id, filepath);
         }
     );
 

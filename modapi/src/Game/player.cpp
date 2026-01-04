@@ -25,7 +25,7 @@ void Player::init()
     }
     auto end = std::chrono::high_resolution_clock::now();
     auto duration = std::chrono::duration_cast<std::chrono::milliseconds>(end - start).count();
-    printf("[+] Player Initialization took: %lld ms\n", duration);
+    std::cout << "[+] Player initialization took: " << duration << "ms" << std::endl;
 }
 
 int Player::getmoney()

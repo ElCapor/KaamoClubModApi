@@ -20,7 +20,7 @@ void Station::init()
     }
     auto end = std::chrono::high_resolution_clock::now();
     auto duration = std::chrono::duration_cast<std::chrono::milliseconds>(end - start).count();
-    printf("[+] Station Initialization took: %lld ms\n", duration);
+    std::cout << "[+] Station initialization took: " << duration << "ms" << std::endl;
 }
 
 int Station::getid()

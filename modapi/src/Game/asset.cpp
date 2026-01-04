@@ -4,20 +4,30 @@
 #include <Game/station.h>
 #include <Game/mission.h>
 #include <Game/asset.h>
+#include <thread>
+#include <chrono>
 
 void Asset::init()
 {
-    globals_canvas = MemoryUtils::GetModuleBase("GoF2.exe") + 0x20AE68; // Globals::Canvas
+    auto start = std::chrono::high_resolution_clock::now();
+    uintptr_t base = MemoryUtils::GetModuleBase("GoF2.exe");
+
+    while (globals_canvas == nullptr) {
+        globals_canvas = *reinterpret_cast<Globals_Canvas**>(base + 0x20AE68); // Globals::Canvas
+        if (globals_canvas == nullptr) 
+            std::this_thread::sleep_for(std::chrono::milliseconds(100));
+    }
+    auto end = std::chrono::high_resolution_clock::now();
+    auto duration = std::chrono::duration_cast<std::chrono::milliseconds>(end - start).count();
+    std::cout << "[+] Asset initialization took: " << duration << "ms" << std::endl;
 }
 
-std::string Asset::getassetfilepath(unsigned int offset)
+std::string Asset::getassetfilepath(unsigned int id)
 {
-    uintptr_t finaladdr = MemoryUtils::GetPointerAddress(globals_canvas, {0x148, offset, 0xC, 0x0, 0x0});
-    return MemoryUtils::ReadString(finaladdr);
+    return MemoryUtils::ReadString(globals_canvas->m_pResources.data[id]->m_pResourceInfo->m_sResourcePath);
 }
 
-void Asset::setassetfilepath(unsigned int offset, const std::string value)
+void Asset::setassetfilepath(unsigned int id, const std::string value)
 {
-    uintptr_t finaladdr = MemoryUtils::GetPointerAddress(globals_canvas, {0x148, offset, 0xC, 0x0, 0x0});
-    MemoryUtils::WriteString(finaladdr, value);
+    MemoryUtils::WriteString(globals_canvas->m_pResources.data[id]->m_pResourceInfo->m_sResourcePath, value);
 }
