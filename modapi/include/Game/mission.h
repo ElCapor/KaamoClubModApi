@@ -11,5 +11,7 @@ class Mission {
         static void setid(int value);
         static int getcompletedsidemissions(void);
         static void setcompletedsidemissions(int value);
+        
+        static void enablevalkyrie(void);
 };
 #endif

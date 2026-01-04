@@ -6,6 +6,7 @@
 #include <Game/asset.h>
 #include <thread>
 #include <chrono>
+#include "patches.h"
 
 void Mission::init()
 {
@@ -40,4 +41,9 @@ int Mission::getcompletedsidemissions()
 void Mission::setcompletedsidemissions(int value)
 {
     globals_status->m_nCompletedSideMissions = value;
+}
+
+void Mission::enablevalkyrie()
+{
+    Patches::patchvalkyrie();
 }

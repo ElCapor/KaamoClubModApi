@@ -13,11 +13,11 @@ math.randomseed(os.time())
 
 RegisterEvent("EarlyInit", function()
 	-- // Example of how to create a system with stations in
-	--local systemid = system:Create("cool system", 50, 30, 47, 3, 3, 9) -- name, x, y, z, faction, risk, textureid (star)
-	--local stationid = station:Create("test 1", 10, 9, systemid) -- name, techlevel, textureid (planet), systemid
-	--local stationid2 = station:Create("test 2", 1, 3, systemid)
-	--local stationid3 = station:Create("test 3", 2, 2, systemid)
-	--local stationid4 = station:Create("test 4", 3, 1, systemid)
+	local systemid = system:Create("cool system", 50, 30, 47, 3, 3, 9) -- name, x, y, z, faction, risk, textureid (star)
+	local stationid = station:Create("test 1", 10, 9, systemid) -- name, techlevel, textureid (planet), systemid
+	local stationid2 = station:Create("test 2", 1, 3, systemid)
+	local stationid3 = station:Create("test 3", 2, 2, systemid)
+	local stationid4 = station:Create("test 4", 3, 1, systemid)
 	--print("Made station id : " .. stationid)
 	--print("Made station id : " .. stationid2)
 	--print("Made station id : " .. stationid3)

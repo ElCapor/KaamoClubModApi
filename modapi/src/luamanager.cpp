@@ -75,7 +75,10 @@ void LuaManager::bind_api()
     lua_state.new_usertype<Mission>("Mission",
         sol::no_constructor,
         "id", sol::property(&Mission::getid, &Mission::setid),
-        "completedsidemissions", sol::property(&Mission::getcompletedsidemissions, &Mission::setcompletedsidemissions)
+        "completedsidemissions", sol::property(&Mission::getcompletedsidemissions, &Mission::setcompletedsidemissions),
+        "EnableValkyrie", [](Mission& self) {
+            Mission::enablevalkyrie();
+        }
     );
 
     lua_state.new_usertype<Station>("Station",

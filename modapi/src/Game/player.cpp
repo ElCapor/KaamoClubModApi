@@ -40,31 +40,43 @@ void Player::setmoney(int value)
 
 int Player::getmaxcargo()
 {
+   if (globals_status->m_pShipInfo == nullptr) 
+        return 0;
     return globals_status->m_pShipInfo->m_nMaxCapacity;
 }
 
 void Player::setmaxcargo(int value)
 {
+   if (globals_status->m_pShipInfo == nullptr)
+        return;
     globals_status->m_pShipInfo->m_nMaxCapacity;
 }
 
 int Player::getcargo()
 {
+    if (globals_status->m_pShipInfo == nullptr) // Valkyrie crash fix, some missions might force change your ship
+        return 0;
     return globals_status->m_pShipInfo->m_nCurrentCapacity;
 }
 
 void Player::setcargo(int value)
 {
+    if (globals_status->m_pShipInfo == nullptr)
+        return;
     globals_status->m_pShipInfo->m_nCurrentCapacity = value;
 }
 
 int Player::getshiparmor()
 {
+   if (globals_status->m_pShipInfo == nullptr) 
+        return 0;
     return globals_status->m_pShipInfo->m_nArmor;
 }
 
 void Player::setshiparmor(int value)
 {
+   if (globals_status->m_pShipInfo == nullptr) 
+        return;
     globals_status->m_pShipInfo->m_nArmor = value;
 }
 
@@ -77,11 +89,15 @@ bool Player::hasshiparmor()
 
 int Player::getmaxshiphealth()
 {
+   if (globals_status->m_pShipInfo == nullptr) 
+        return 0;
     return globals_status->m_pShipInfo->m_nMaxShipHealth;
 }
 
 void Player::setmaxshiphealth(int value)
 {
+   if (globals_status->m_pShipInfo == nullptr) 
+        return;
     globals_status->m_pShipInfo->m_nMaxShipHealth = value;
 }
 
