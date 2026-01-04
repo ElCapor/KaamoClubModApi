@@ -5,9 +5,11 @@ assetchanged = false
 
 function get_every_assets_filepath()
 	local filepath
-	for i = 0x0,0x8000 do
+	-- game will crash cuz there aren't 8000 textures lol but this is for making sure we are printing everythings
+	for i = 0,8000 do
 		filepath = asset:GetAssetFilePath(i)
-		if filepath ~= "" then print(filepath) end
+		--if filepath ~= "" and string.find(filepath:lower(), "interface") then print(filepath .. " index: " .. i) end
+		if filepath ~= "" then print(filepath .. " index: " .. i) end
 	end
 end
 
@@ -50,7 +52,7 @@ RegisterEvent("IsInMainMenu", function()
 	if assetchanged then return end
 	--get_every_assets_filepath()
 	print("Asset changed!")
-	asset:SetAssetFilePath(0x2008, "mods/hello_mod/my_assets/custom_gof2_interface.aei") -- feel free to custom the gof2 interface with any tools (I don't know if we have any) also you can call this setassetfilepath function while the game is running BUT it won't be edited instantly, for the asset to be edited you need to 'reload' the game aka going to a station, changing system etc..
+	asset:SetAssetFilePath(2050, "mods/hello_mod/my_assets/custom_gof2_interface.aei") -- feel free to custom the gof2 interface with any tools (I don't know if we have any) also you can call this setassetfilepath function while the game is running BUT it won't be edited instantly, for the asset to be edited you need to 'reload' the game aka going to a station, changing system etc..
 	assetchanged = true
 end)
 
@@ -73,6 +75,7 @@ RegisterEvent("OnSystemChanged", function(id)
 	print("Station id : " .. station.id)
 	print("Station angar items count : " .. station.angaritemscount)
 	print("Station angar ships count : " .. station.angarshipscount)
+	print("Station agents count : " .. station.agentscount)
 	print("Player money : " .. player.money)
 	print("Player Ship cargo : " .. player.cargo)
 	print("Player Ship maxcargo : " .. player.maxcargo)
@@ -80,11 +83,11 @@ RegisterEvent("OnSystemChanged", function(id)
 	print("Player Ship maxhealth : " .. player.maxhealth)
 	print("Player Enemies killed : " .. player.enemieskilled)
 	print("Player level : " .. player.level)
-	print("Player jump gate used count : " .. player.jumpgateusedcount)
 	print("Player visisted stations : " .. player.visitedstations)
 	print("Player Completed side missions : " .. mission.completedsidemissions)
 	print("Player Cargo salvaged count : " .. player.cargosalvagedcount)
 	print("Player Asteroids destroyed count : " .. player.asteroidsdestroyedcount)
+	print("Player current mission : " .. mission.id)
 	if player:HasShipArmor() then
 		print("The ship has an armor")
 	end
@@ -94,7 +97,7 @@ RegisterEvent("OnSystemChanged", function(id)
 	if not system:IsVisible(26) then
 		print("Shima system is not visible")
 	end
-	print("GOF2 Interface AEI : " .. asset:GetAssetFilePath(0x2008)) -- 0x2008 is the offset of the interface
+	print("GOF2 Interface AEI : " .. asset:GetAssetFilePath(2050)) -- 2050 is the id of the interface
 end)
 
 RegisterEvent("OnUpdate", function()

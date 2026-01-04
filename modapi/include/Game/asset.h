@@ -3,10 +3,10 @@
 
 class Asset {
     private:
-        static inline uintptr_t globals_canvas = 0;
+        static inline Globals_Canvas* globals_canvas = 0;
     public:
         static void init(void);
-        static std::string getassetfilepath(unsigned int offset);
-        static void setassetfilepath(unsigned int offset, const std::string value);
+        static std::string getassetfilepath(unsigned int id);
+        static void setassetfilepath(unsigned int id, const std::string value);
 };
 #endif
