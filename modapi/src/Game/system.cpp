@@ -160,7 +160,7 @@ int System::create(const std::string& str, int x, int y, int z, int faction, int
     s.starts_unlocked = true;
     if (linkedsystemid != -1) {
         s.linked_system_ids = AbyssEngine::newarray<uint32_t>(1);
-        s.linked_system_ids->data[0] = 26;
+        s.linked_system_ids->data[0] = linkedsystemid;
     } else {
         s.linked_system_ids = nullptr;
     }
