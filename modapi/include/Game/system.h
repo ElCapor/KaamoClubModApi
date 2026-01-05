@@ -25,7 +25,7 @@ class System {
         static std::string getname(void);
         static void setname(std::string value);
 
-        static int create(const std::string& str, int x, int y, int z, int faction, int risk, int textureid);
+        static int create(const std::string& str, int x, int y, int z, int faction, int risk, int textureid, int linkedsystemid);
         static bool isvisible(int systemid);
         static void setvisible(int systemid, bool visible);
 };

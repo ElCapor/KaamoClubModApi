@@ -139,7 +139,7 @@ void System::setname(std::string value)
     MemoryUtils::WriteWideString(strptr, value);
 }
 
-int System::create(const std::string& str, int x, int y, int z, int faction, int risk, int textureid)
+int System::create(const std::string& str, int x, int y, int z, int faction, int risk, int textureid, int linkedsystemid)
 {
     if (EventManager::isearlyinit_finished) {
         std::cout << "[-] Failed to call system:Create(), you can only call it in the EarlyInit event" << std::endl;
@@ -156,14 +156,18 @@ int System::create(const std::string& str, int x, int y, int z, int faction, int
     s.name = AbyssEngine::newstring(out.c_str());
     s.pos  = { x, y, z };
     s.id = 0;
-    s.jumpgate_station_id = 30;
+    s.jumpgate_station_id = 0;
     s.starts_unlocked = true;
-    s.linked_system_ids = nullptr;
+    if (linkedsystemid != -1) {
+        s.linked_system_ids = AbyssEngine::newarray<uint32_t>(1);
+        s.linked_system_ids->data[0] = 26;
+    } else {
+        s.linked_system_ids = nullptr;
+    }
     s.station_ids = nullptr;
     s.faction = faction;
     s.risk = risk;
     s.texture_id = textureid;
-
     created_systems.push_back(s);
     return 26 + created_systems.size();
 }
