@@ -21,7 +21,7 @@
 
 void LuaManager::init()
 {
-    lua_state.open_libraries(sol::lib::base, sol::lib::package, sol::lib::string, sol::lib::math, sol::lib::os);
+    lua_state.open_libraries(sol::lib::base, sol::lib::package, sol::lib::string, sol::lib::math, sol::lib::os, sol::lib::io);
 }
 
 void LuaManager::bind_api()
@@ -135,4 +135,5 @@ void LuaManager::execute_script(const std::string& filepath)
     catch (const sol::error& e) {
         std::cout << "[LuaManager] Lua exception: " << e.what() << std::endl;
     }
+
 }
