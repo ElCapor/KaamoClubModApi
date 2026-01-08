@@ -76,6 +76,9 @@ RegisterEvent("OnSystemChanged", function(id)
 	print("Station angar items count : " .. station.angaritemscount)
 	print("Station angar ships count : " .. station.angarshipscount)
 	print("Station agents count : " .. station.agentscount)
+	for i = 0, station.agentscount - 1 do
+		print("Station agent #" .. i .. " name: " .. station:GetAgentName(i) .. " | faction: " .. station:GetAgentFaction(i))
+	end
 	print("Player money : " .. player.money)
 	print("Player Ship cargo : " .. player.cargo)
 	print("Player Ship maxcargo : " .. player.maxcargo)
@@ -97,6 +100,7 @@ RegisterEvent("OnSystemChanged", function(id)
 	if not system:IsVisible(26) then
 		print("Shima system is not visible")
 	end
+
 	print("GOF2 Interface AEI : " .. asset:GetAssetFilePath(2050)) -- 2050 is the id of the interface
 end)
 
