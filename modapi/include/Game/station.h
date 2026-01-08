@@ -23,5 +23,8 @@ class Station {
         static bool isvoid(void);
         static void setangarshipid(int id, int value);
         static int create(const std::string& str, int techlevel, int textureid, int systemid);
+        static std::string getagentname(int id);
+        static int getagentfaction(int id);
+        static void createagent(const std::string& str, int factiontype, int terranwoman);
 };
 #endif

@@ -50,8 +50,48 @@ struct SingleSystem {
     bool starts_unlocked;
 };
 
+struct AgentTextureFaceInfo {
+    int faction_type;
+    int mouth;
+    int eyes;
+    int armor;
+    int hair;
+    int field_14;
+};
+
 struct SingleAgent {
-    int unk0;
+    AEString m_sName;
+    int field_08;
+    int field_0C;
+    int field_10;
+    int field_14;
+    int field_18;
+    int field_1C;
+    int m_nMissionStringLangId;
+    int field_24;
+    int field_28;
+    int field_2C;
+    int m_nItemPrice;
+    int m_nItemStringLangId;
+    int field_38;
+    int field_3C;
+    int m_nFactionType;
+    int m_nIsTerranWoman;
+    int m_nGreetings;
+    int field_4C;
+    int m_nTalkingType;
+    int m_nAlliesPrice;
+    int field_58;
+    int field_5C;
+    int* field_60;
+    int field_64;
+    int* field_68;
+    int field_6C;
+    int* field_70;
+    AgentTextureFaceInfo* m_pAgentTextureFace;
+    int* m_pMissionInfo;
+    int* m_pRecruitedAllies;
+    int field_80;
 };
 
 struct SingleStation {
@@ -695,7 +735,7 @@ struct Globals_status {
     int field_A8;
     int field_AC;
     int field_B0;
-    int field_B4;
+    int m_nWingmenHired;
     int m_nAsteroidsDestroyed;
     int field_BC;
     int field_C0;

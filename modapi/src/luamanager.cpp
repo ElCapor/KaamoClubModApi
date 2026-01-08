@@ -97,6 +97,15 @@ void LuaManager::bind_api()
         },
         "Create", [](Station& self, const std::string& str, int techlevel, int textureid, int systemid) {
             return Station::create(str, techlevel, textureid, systemid);
+        },
+        "GetAgentName", [](Station& self, int id) {
+            return Station::getagentname(id);
+        },
+        "GetAgentFaction", [](Station& self, int id) {
+            return Station::getagentfaction(id);
+        },
+        "CreateAgent", [](Station& self, const std::string& name, int factiontype, int terranwoman) {
+            Station::createagent(name, factiontype, terranwoman);
         }
     );
 
@@ -135,5 +144,4 @@ void LuaManager::execute_script(const std::string& filepath)
     catch (const sol::error& e) {
         std::cout << "[LuaManager] Lua exception: " << e.what() << std::endl;
     }
-
 }

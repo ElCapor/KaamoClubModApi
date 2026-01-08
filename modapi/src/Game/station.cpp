@@ -158,3 +158,87 @@ int Station::create(const std::string& str, int techlevel, int textureid, int sy
     created_stations.push_back(s);
     return 108 + created_stations.size();
 }
+
+std::string Station::getagentname(int id)
+{
+    if (globals_status->m_pStationInfo->m_pAgents == nullptr)
+        return "";
+    SingleAgent** agents_list = reinterpret_cast<SingleAgent**>(globals_status->m_pStationInfo->m_pAgents->data);
+    SingleAgent* agent = agents_list[id];
+    return MemoryUtils::ReadWideString(reinterpret_cast<uintptr_t>(agent->m_sName.text));
+}
+
+int Station::getagentfaction(int id)
+{
+    if (globals_status->m_pStationInfo->m_pAgents == nullptr)
+        return 0;
+    SingleAgent** agents_list = reinterpret_cast<SingleAgent**>(globals_status->m_pStationInfo->m_pAgents->data);
+    SingleAgent* agent = agents_list[id];
+    return agent->m_nFactionType;
+}
+
+void Station::createagent(const std::string& name, int factiontype, int terranwoman)
+{
+    SingleStation* station = globals_status->m_pStationInfo;
+    AEArray<SingleAgent*>* oldArray = reinterpret_cast<AEArray<SingleAgent*>*>(station->m_pAgents);
+    uint32_t oldSize = (oldArray != nullptr) ? oldArray->size : 0;
+    uint32_t newSize = oldSize + 1;
+    AEArray<SingleAgent*>* newArray = AbyssEngine::newarray<SingleAgent*>(newSize);
+
+    if (!newArray) return;
+    if (oldArray != nullptr && oldArray->data != nullptr) {
+        for (uint32_t i = 0; i < oldSize; ++i)
+            newArray->data[i] = oldArray->data[i];
+    }
+    SingleAgent* pNewAgent = reinterpret_cast<SingleAgent*>(AbyssEngine::memory_allocate(sizeof(SingleAgent)));
+    if (pNewAgent) {
+        memset(pNewAgent, 0, sizeof(SingleAgent));
+        int len = MultiByteToWideChar(CP_UTF8, 0, name.c_str(), -1, NULL, 0);
+        wchar_t* buf = new wchar_t[len];
+        MultiByteToWideChar(CP_UTF8, 0, name.c_str(), -1, buf, len);
+        pNewAgent->m_sName = AbyssEngine::newstring(buf);
+        delete[] buf;
+        pNewAgent->field_08 = 0;
+        pNewAgent->field_0C = 0;
+        pNewAgent->field_10 = 0;
+        pNewAgent->field_14 = 0;         
+        pNewAgent->field_18 = 0;
+        pNewAgent->field_1C = 0;
+        pNewAgent->m_nMissionStringLangId = 1059; // 803 funny
+        pNewAgent->field_24 = -1;
+        pNewAgent->field_28 = 0;
+        pNewAgent->field_2C = 0;
+        pNewAgent->m_nItemPrice = -1;
+        pNewAgent->m_nItemStringLangId = -1;
+        pNewAgent->field_38 = 0;
+        pNewAgent->field_3C = 0;
+        pNewAgent->m_nFactionType = factiontype;
+        if (factiontype == 0 && terranwoman == 1)
+            pNewAgent->m_nIsTerranWoman = 1;
+        else
+            pNewAgent->m_nIsTerranWoman = 0;
+        pNewAgent->m_nGreetings = 1;
+        pNewAgent->field_4C = 1;
+        pNewAgent->m_nTalkingType = 1;
+        pNewAgent->m_nAlliesPrice = 0;
+        pNewAgent->field_58 = -1;
+        pNewAgent->field_5C = -1;
+        pNewAgent->field_60 = nullptr;
+        pNewAgent->field_64 = 0;
+        pNewAgent->field_68 = nullptr;
+        pNewAgent->field_6C = 0;
+        pNewAgent->field_70 = nullptr;
+        pNewAgent->m_pAgentTextureFace = reinterpret_cast<AgentTextureFaceInfo*>(AbyssEngine::memory_allocate(sizeof(AgentTextureFaceInfo)));
+        pNewAgent->m_pAgentTextureFace->faction_type = 0;
+        pNewAgent->m_pAgentTextureFace->mouth = 0;
+        pNewAgent->m_pAgentTextureFace->eyes = 0;
+        pNewAgent->m_pAgentTextureFace->armor = 0;
+        pNewAgent->m_pAgentTextureFace->hair = 0;
+        pNewAgent->m_pAgentTextureFace->field_14 = 0;
+        pNewAgent->m_pMissionInfo = nullptr;
+        pNewAgent->m_pRecruitedAllies = nullptr;
+        pNewAgent->field_80 = 0;
+        newArray->data[oldSize] = pNewAgent;
+    }
+    station->m_pAgents = reinterpret_cast<AEArray<SingleAgent>*>(newArray);
+}
