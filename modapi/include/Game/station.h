@@ -25,6 +25,6 @@ class Station {
         static int create(const std::string& str, int techlevel, int textureid, int systemid);
         static std::string getagentname(int id);
         static int getagentfaction(int id);
-        static void createagent(const std::string& str, int factiontype, int terranwoman);
+        static void createagent(const std::string& str, int factiontype, int terranwoman, sol::table agentinfo);
 };
 #endif

@@ -19,7 +19,6 @@ void Asset::init()
     }
     auto end = std::chrono::high_resolution_clock::now();
     auto duration = std::chrono::duration_cast<std::chrono::milliseconds>(end - start).count();
-    std::cout << "[+] Asset initialization took: " << duration << "ms" << std::endl;
 }
 
 std::string Asset::getassetfilepath(unsigned int id)

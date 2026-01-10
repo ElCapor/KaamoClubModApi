@@ -20,7 +20,6 @@ void Station::init()
     }
     auto end = std::chrono::high_resolution_clock::now();
     auto duration = std::chrono::duration_cast<std::chrono::milliseconds>(end - start).count();
-    std::cout << "[+] Station initialization took: " << duration << "ms" << std::endl;
 }
 
 int Station::getid()
@@ -177,18 +176,25 @@ int Station::getagentfaction(int id)
     return agent->m_nFactionType;
 }
 
-void Station::createagent(const std::string& name, int factiontype, int terranwoman)
+void Station::createagent(const std::string& name, int factiontype, int terranwoman, sol::table agentinfo)
 {
+    if (!agentinfo) {
+        std::cout << "[-] Cannot create agent '" << name << "' because its missing the agentinfo table !" << std::endl;
+        return;
+    }
     SingleStation* station = globals_status->m_pStationInfo;
-    AEArray<SingleAgent*>* oldArray = reinterpret_cast<AEArray<SingleAgent*>*>(station->m_pAgents);
-    uint32_t oldSize = (oldArray != nullptr) ? oldArray->size : 0;
-    uint32_t newSize = oldSize + 1;
-    AEArray<SingleAgent*>* newArray = AbyssEngine::newarray<SingleAgent*>(newSize);
+    AEArray<SingleAgent*>* oldarray = reinterpret_cast<AEArray<SingleAgent*>*>(station->m_pAgents);
+    if (oldarray != nullptr && oldarray->size2 == 7) {
+        std::cout << "[-] Cannot create agent '" << name << "' because the space lounge has reached the limit (7) you might need to check agents count to avoid duplicates?" << std::endl;
+        return;
+    }
+    uint32_t oldsize = (oldarray != nullptr) ? oldarray->size : 0;
+    AEArray<SingleAgent*>* newarray = AbyssEngine::newarray<SingleAgent*>(oldsize + 1);
 
-    if (!newArray) return;
-    if (oldArray != nullptr && oldArray->data != nullptr) {
-        for (uint32_t i = 0; i < oldSize; ++i)
-            newArray->data[i] = oldArray->data[i];
+    if (!newarray) return;
+    if (oldarray != nullptr && oldarray->data != nullptr) {
+        for (uint32_t i = 0; i < oldsize; ++i)
+            newarray->data[i] = oldarray->data[i];
     }
     SingleAgent* pNewAgent = reinterpret_cast<SingleAgent*>(AbyssEngine::memory_allocate(sizeof(SingleAgent)));
     if (pNewAgent) {
@@ -204,11 +210,32 @@ void Station::createagent(const std::string& name, int factiontype, int terranwo
         pNewAgent->field_14 = 0;         
         pNewAgent->field_18 = 0;
         pNewAgent->field_1C = 0;
-        pNewAgent->m_nMissionStringLangId = 1059; // 803 funny
-        pNewAgent->field_24 = -1;
-        pNewAgent->field_28 = 0;
-        pNewAgent->field_2C = 0;
-        pNewAgent->m_nItemPrice = -1;
+        if (agentinfo["talking_type"] == 1 || agentinfo["talking_type"] == 2 && agentinfo["talking_string"])
+            pNewAgent->m_nTalkingStringLangId1 = agentinfo["talking_string"];
+        else if(agentinfo["talking_type"] == 2)
+            pNewAgent->m_nTalkingStringLangId1 = 750; // fallback
+        else
+            pNewAgent->m_nTalkingStringLangId1 = 803; // fallback
+        if (agentinfo["talking_type"] == 2 && agentinfo["talking_string_2"])
+            pNewAgent->m_nTalkingStringLangId2 = agentinfo["talking_string_2"];
+        else if(agentinfo["talking_type"] == 2)
+            pNewAgent->m_nTalkingStringLangId2 = 753; // fallback
+        else
+            pNewAgent->m_nTalkingStringLangId2 = -1;
+        if (agentinfo["talking_type"] == 2 && agentinfo["item_selling"])
+            pNewAgent->m_nItemSellingId = agentinfo["item_selling"];
+        else
+            pNewAgent->m_nItemSellingId = 0;
+        if (agentinfo["talking_type"] == 2 && agentinfo["item_count"])
+            pNewAgent->m_nItemCount = agentinfo["item_count"];
+        else
+            pNewAgent->m_nItemCount = 0;
+        if (agentinfo["talking_type"] == 2 && agentinfo["item_price"])
+            pNewAgent->m_nItemPrice = agentinfo["item_price"];
+        else if(agentinfo["talking_type"] == 2)
+            pNewAgent->m_nItemPrice = 0;
+        else
+            pNewAgent->m_nItemPrice = -1;
         pNewAgent->m_nItemStringLangId = -1;
         pNewAgent->field_38 = 0;
         pNewAgent->field_3C = 0;
@@ -217,9 +244,15 @@ void Station::createagent(const std::string& name, int factiontype, int terranwo
             pNewAgent->m_nIsTerranWoman = 1;
         else
             pNewAgent->m_nIsTerranWoman = 0;
-        pNewAgent->m_nGreetings = 1;
+        if (agentinfo["auto_talking_string"])
+            pNewAgent->m_nGreetings = 0; // yes 0, this is intended
+        else
+            pNewAgent->m_nGreetings = 1;
         pNewAgent->field_4C = 1;
-        pNewAgent->m_nTalkingType = 1;
+        if (agentinfo["talking_type"] == 1 || agentinfo["talking_type"] == 2)
+            pNewAgent->m_nTalkingType = agentinfo["talking_type"]; // 2 = seller
+        else
+            pNewAgent->m_nTalkingType = 1;
         pNewAgent->m_nAlliesPrice = 0;
         pNewAgent->field_58 = -1;
         pNewAgent->field_5C = -1;
@@ -238,7 +271,7 @@ void Station::createagent(const std::string& name, int factiontype, int terranwo
         pNewAgent->m_pMissionInfo = nullptr;
         pNewAgent->m_pRecruitedAllies = nullptr;
         pNewAgent->field_80 = 0;
-        newArray->data[oldSize] = pNewAgent;
+        newarray->data[oldsize] = pNewAgent;
     }
-    station->m_pAgents = reinterpret_cast<AEArray<SingleAgent>*>(newArray);
+    station->m_pAgents = reinterpret_cast<AEArray<SingleAgent>*>(newarray);
 }

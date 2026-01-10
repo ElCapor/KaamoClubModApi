@@ -104,8 +104,8 @@ void LuaManager::bind_api()
         "GetAgentFaction", [](Station& self, int id) {
             return Station::getagentfaction(id);
         },
-        "CreateAgent", [](Station& self, const std::string& name, int factiontype, int terranwoman) {
-            Station::createagent(name, factiontype, terranwoman);
+        "CreateAgent", [](Station& self, const std::string& name, int factiontype, int terranwoman, sol::table agentinfo) {
+            Station::createagent(name, factiontype, terranwoman, agentinfo);
         }
     );
 
@@ -134,8 +134,12 @@ void LuaManager::bind_api()
 void LuaManager::execute_script(const std::string& filepath)
 {
     try {
+        std::filesystem::path path(filepath);
+        std::string scriptdir = path.parent_path().string();
+        std::string cpath = lua_state["package"]["path"];
+
+        lua_state["package"]["path"] = cpath + ";" + scriptdir + "/?.lua";
         auto result = lua_state.script_file(filepath);
-        
         if (!result.valid()) {
             sol::error err = result;
             std::cout << "[LuaManager] Lua Script error: " << err.what() << std::endl;

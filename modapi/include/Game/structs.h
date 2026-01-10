@@ -67,10 +67,10 @@ struct SingleAgent {
     int field_14;
     int field_18;
     int field_1C;
-    int m_nMissionStringLangId;
-    int field_24;
-    int field_28;
-    int field_2C;
+    int m_nTalkingStringLangId1;
+    int m_nTalkingStringLangId2;
+    int m_nItemSellingId; // 28
+    int m_nItemCount;
     int m_nItemPrice;
     int m_nItemStringLangId;
     int field_38;
@@ -536,7 +536,8 @@ struct CameraData {
     int field_138;
     int field_13C;
     int field_140;
-    AEArray<Resource> m_pResources; //144 - count, 148 - array pointers
+    int field_144;
+    int field_148;
     int field_14C;
     int field_150;
     int field_154;

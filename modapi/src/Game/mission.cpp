@@ -20,7 +20,6 @@ void Mission::init()
     }
     auto end = std::chrono::high_resolution_clock::now();
     auto duration = std::chrono::duration_cast<std::chrono::milliseconds>(end - start).count();
-    std::cout << "[+] Mission initialization took: " << duration << "ms" << std::endl;
 }
 
 int Mission::getid()

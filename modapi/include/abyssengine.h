@@ -25,6 +25,24 @@ class AbyssEngine {
             }
             return result;
         }
+        typedef void(__cdecl* free_t)(void* ptr);
+        static void memory_free(void *ptr)
+        {
+            static uintptr_t fptr = 0x0052D14C;
+            free_t pfree = *reinterpret_cast<free_t*>(fptr);
+
+            if (!pfree) {
+                std::cout << "nahhhhh" << std::endl;
+                return;
+            }
+
+            // SEH
+            __try {
+                pfree(ptr);
+            } __except (EXCEPTION_EXECUTE_HANDLER) {
+                std::cout << "wtf" << std::endl;
+            }
+        }
         static AEString newstring(const wchar_t* str)
         {
             AEString r = { 0 };
