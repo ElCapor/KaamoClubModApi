@@ -178,6 +178,9 @@ int Station::getagentfaction(int id)
 
 void Station::createagent(const std::string& name, int factiontype, int terranwoman, int hair, int eyes, int mouth, int armor, sol::table agentinfo)
 {
+    Sleep(1); // hell no
+    if (globals_status->m_pStationInfo == nullptr)
+        return;
     if (!agentinfo) {
         std::cout << "[-] Cannot create agent '" << name << "' because its missing the agentinfo table !" << std::endl;
         return;
