@@ -178,7 +178,6 @@ int Station::getagentfaction(int id)
 
 void Station::createagent(const std::string& name, int factiontype, int terranwoman, int hair, int eyes, int mouth, int armor, sol::table agentinfo)
 {
-    std::cout << "called" << std::endl;
     if (!agentinfo) {
         std::cout << "[-] Cannot create agent '" << name << "' because its missing the agentinfo table !" << std::endl;
         return;
