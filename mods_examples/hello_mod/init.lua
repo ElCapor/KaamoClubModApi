@@ -50,6 +50,13 @@ RegisterEvent("OnStationDocked", function()
 	--shipinfo["id"] = math.random(1,29)
 	--print(shipinfo["id"])
 	--station:SetHangarShipInfo(0, shipinfo)
+	--local shipinfo = {
+	--	maxcargo = 9999,
+	--	armor = 9999,
+	--	price = 99999999,
+	--	maxhealth = 9999
+	--}
+	--player:SetShipInfo(shipinfo)
 end)
 
 RegisterEvent("IsInMainMenu", function()
@@ -84,10 +91,10 @@ RegisterEvent("OnSystemChanged", function(id)
 		print("Station agent #" .. i .. " name: " .. station:GetAgentName(i) .. " | faction: " .. station:GetAgentFaction(i))
 	end
 	print("Player money : " .. player.money)
-	print("Player Ship cargo : " .. player.cargo)
-	print("Player Ship maxcargo : " .. player.maxcargo)
-	print("Player Ship armor : " .. player.armor)
-	print("Player Ship maxhealth : " .. player.maxhealth)
+	print("Player Ship cargo : " .. player:GetShipInfo()["cargo"])
+	print("Player Ship maxcargo : " .. player:GetShipInfo()["maxcargo"])
+	print("Player Ship armor : " .. player:GetShipInfo()["armor"])
+	print("Player Ship maxhealth : " .. player:GetShipInfo()["maxhealth"])
 	print("Player Enemies killed : " .. player.enemieskilled)
 	print("Player level : " .. player.level)
 	print("Player visisted stations : " .. player.visitedstations)

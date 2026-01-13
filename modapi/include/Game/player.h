@@ -6,18 +6,12 @@ class Player {
     private:
         static inline Globals_status* globals_status = 0;
         static inline Globals_appManager* globals_appmanager = 0;
+        static inline lua_State* lstate = nullptr;
     public:
-        static void init(void);
+        static void init(lua_State* lua_state);
         static int getmoney(void);
         static void setmoney(int value);
-        static int getmaxcargo(void);
-        static void setmaxcargo(int value);
-        static int getcargo(void);
-        static void setcargo(int value);
-        static int getshiparmor(void);
-        static void setshiparmor(int value);
-        static int getmaxshiphealth(void);
-        static void setmaxshiphealth(int value);
+        static void setshipinfo(sol::table shipinfo);
         static int getenemieskilled(void);
         static void setenemieskilled(int value);
         static int getlevel(void);
@@ -33,5 +27,6 @@ class Player {
 
         static bool hasshiparmor(void);
         static bool isdocked(void);
+        static sol::table getshipinfo(void);
 };
 #endif

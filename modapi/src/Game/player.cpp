@@ -7,7 +7,7 @@
 #include <thread>
 #include <chrono>
 
-void Player::init()
+void Player::init(lua_State* lua_state)
 {
     auto start = std::chrono::high_resolution_clock::now();
     uintptr_t base = MemoryUtils::GetModuleBase("GoF2.exe");
@@ -25,6 +25,7 @@ void Player::init()
     }
     auto end = std::chrono::high_resolution_clock::now();
     auto duration = std::chrono::duration_cast<std::chrono::milliseconds>(end - start).count();
+    lstate = lua_state;
 }
 
 int Player::getmoney()
@@ -37,67 +38,47 @@ void Player::setmoney(int value)
     globals_status->m_nMoney = value;
 }
 
-int Player::getmaxcargo()
+sol::table Player::getshipinfo()
 {
-   if (globals_status->m_pShipInfo == nullptr) 
-        return 0;
-    return globals_status->m_pShipInfo->m_nMaxCapacity;
+    sol::state_view lua(lstate);
+    sol::table shipinfo = lua.create_table();
+
+    shipinfo["id"] = globals_status->m_pShipInfo->m_nID;
+    shipinfo["maxhealth"] = globals_status->m_pShipInfo->m_nMaxHealth;
+    shipinfo["baseprice"] = globals_status->m_pShipInfo->m_nBasePrice;
+    shipinfo["maxcargo"] = globals_status->m_pShipInfo->m_nMaxCapacity;
+    shipinfo["cargo"] = globals_status->m_pShipInfo->m_nCurrentCapacity;
+    shipinfo["price"] = globals_status->m_pShipInfo->m_nPrice;
+    shipinfo["controlmultiplier"] = globals_status->m_pShipInfo->m_fControlMultiplier;
+    shipinfo["armor"]  = globals_status->m_pShipInfo->m_nArmor;
+    shipinfo["bonuscargo"] = globals_status->m_pShipInfo->m_nBonusCapacity;
+    shipinfo["power"] = globals_status->m_pShipInfo->m_fPower;
+    return shipinfo;
 }
 
-void Player::setmaxcargo(int value)
+void Player::setshipinfo(sol::table shipinfo)
 {
-   if (globals_status->m_pShipInfo == nullptr)
+    if (!shipinfo) {
+        std::cout << "[-] Shipinfo can't be null" << std::endl;
         return;
-    globals_status->m_pShipInfo->m_nMaxCapacity;
-}
-
-int Player::getcargo()
-{
-    if (globals_status->m_pShipInfo == nullptr) // Valkyrie crash fix, some missions might force change your ship
-        return 0;
-    return globals_status->m_pShipInfo->m_nCurrentCapacity;
-}
-
-void Player::setcargo(int value)
-{
-    if (globals_status->m_pShipInfo == nullptr)
-        return;
-    globals_status->m_pShipInfo->m_nCurrentCapacity = value;
-}
-
-int Player::getshiparmor()
-{
-   if (globals_status->m_pShipInfo == nullptr) 
-        return 0;
-    return globals_status->m_pShipInfo->m_nArmor;
-}
-
-void Player::setshiparmor(int value)
-{
-   if (globals_status->m_pShipInfo == nullptr) 
-        return;
-    globals_status->m_pShipInfo->m_nArmor = value;
+    }
+    globals_status->m_pShipInfo->m_nID = shipinfo["id"].get_or<int>(globals_status->m_pShipInfo->m_nID);
+    globals_status->m_pShipInfo->m_nMaxHealth = shipinfo["maxhealth"].get_or<int>(globals_status->m_pShipInfo->m_nMaxHealth);
+    globals_status->m_pShipInfo->m_nBasePrice = shipinfo["baseprice"].get_or<int>(globals_status->m_pShipInfo->m_nBasePrice);
+    globals_status->m_pShipInfo->m_nMaxCapacity = shipinfo["maxcargo"].get_or<int>(globals_status->m_pShipInfo->m_nMaxCapacity);
+    globals_status->m_pShipInfo->m_nCurrentCapacity = shipinfo["cargo"].get_or<int>(globals_status->m_pShipInfo->m_nCurrentCapacity);
+    globals_status->m_pShipInfo->m_nPrice = shipinfo["price"].get_or<int>(globals_status->m_pShipInfo->m_nPrice);
+    globals_status->m_pShipInfo->m_fControlMultiplier = shipinfo["controlmultiplier"].get_or<int>(globals_status->m_pShipInfo->m_fControlMultiplier);
+    globals_status->m_pShipInfo->m_nArmor = shipinfo["armor"].get_or<int>(globals_status->m_pShipInfo->m_nArmor);
+    globals_status->m_pShipInfo->m_nBonusCapacity = shipinfo["bonuscargo"].get_or<int>(globals_status->m_pShipInfo->m_nBonusCapacity);
+    globals_status->m_pShipInfo->m_fPower = shipinfo["power"].get_or<int>(globals_status->m_pShipInfo->m_fPower);
 }
 
 bool Player::hasshiparmor()
 {
-    if (getshiparmor() != 0)
+    if (getshipinfo()["armor"] != 0)
         return true;
     return false;
-}
-
-int Player::getmaxshiphealth()
-{
-   if (globals_status->m_pShipInfo == nullptr) 
-        return 0;
-    return globals_status->m_pShipInfo->m_nMaxHealth;
-}
-
-void Player::setmaxshiphealth(int value)
-{
-   if (globals_status->m_pShipInfo == nullptr) 
-        return;
-    globals_status->m_pShipInfo->m_nMaxHealth = value;
 }
 
 int Player::getenemieskilled()

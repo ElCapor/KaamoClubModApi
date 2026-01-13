@@ -103,8 +103,8 @@ void EventManager::enemiekilled_event()
 
 void EventManager::cargochanged_event()
 {
-    static int old = Player::getcargo();
-    int current = Player::getcargo();
+    static int old = Player::getshipinfo()["cargo"];
+    int current = Player::getshipinfo()["cargo"];
 
     if (current != old) {
         trigger("OnCargoChanged", current);

@@ -34,10 +34,6 @@ void LuaManager::bind_api()
     lua_state.new_usertype<Player>("Player",
         sol::no_constructor,
         "money", sol::property(&Player::getmoney, &Player::setmoney),
-        "cargo", sol::property(&Player::getcargo, &Player::setcargo),
-        "maxcargo", sol::property(&Player::getmaxcargo, &Player::setmaxcargo),
-        "armor", sol::property(&Player::getshiparmor, &Player::setshiparmor),
-        "maxhealth", sol::property(&Player::getmaxshiphealth, &Player::setmaxshiphealth),
         "enemieskilled", sol::property(&Player::getenemieskilled, &Player::setenemieskilled),
         "level", sol::property(&Player::getlevel, &Player::setlevel),
         "visitedstations", sol::property(&Player::getvisitedstations, &Player::setvisitedstations),
@@ -48,6 +44,12 @@ void LuaManager::bind_api()
         },
         "IsDocked", [](Player& self) -> bool {
             return Player::isdocked();
+        },
+        "GetShipInfo", [](Player& self) -> sol::table {
+            return Player::getshipinfo();
+        },
+        "SetShipInfo", [](Player& self, sol::table shipinfo) {
+            Player::setshipinfo(shipinfo);
         }
     );
 
