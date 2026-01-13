@@ -71,47 +71,49 @@ bool Station::isvoid(void)
     return false;
 }
 
-int Station::getangaritemscount()
+int Station::gethangaritemscount()
 {
-    if (globals_status->m_pStationInfo->m_pItemsInAngar == nullptr)
+    if (globals_status->m_pStationInfo->m_pItemsInHangar == nullptr)
         return 0;
-    return globals_status->m_pStationInfo->m_pItemsInAngar->size;
+    return globals_status->m_pStationInfo->m_pItemsInHangar->size;
 }
 
-void Station::setangaritemscount(int value)
+void Station::sethangaritemscount(int value)
 {
-    if (globals_status->m_pStationInfo->m_pItemsInAngar == nullptr)
+    if (globals_status->m_pStationInfo->m_pItemsInHangar == nullptr)
         return;
-    globals_status->m_pStationInfo->m_pItemsInAngar->size = value;
-    globals_status->m_pStationInfo->m_pItemsInAngar->size2 = value;
+    globals_status->m_pStationInfo->m_pItemsInHangar->size = value;
+    globals_status->m_pStationInfo->m_pItemsInHangar->size2 = value;
 }
 
-int Station::getangarshipscount()
+int Station::gethangarshipscount()
 {
-    if (globals_status->m_pStationInfo->m_pShipsInAngar == nullptr)
+    if (globals_status->m_pStationInfo->m_pShipsInHangar == nullptr)
         return 0;
-    return globals_status->m_pStationInfo->m_pShipsInAngar->size;
+    return globals_status->m_pStationInfo->m_pShipsInHangar->size;
 }
 
-void Station::setangarshipscount(int value)
+void Station::sethangarshipscount(int value)
 {
-    if (globals_status->m_pStationInfo->m_pShipsInAngar == nullptr)
+    if (globals_status->m_pStationInfo->m_pShipsInHangar == nullptr)
         return;
-    globals_status->m_pStationInfo->m_pShipsInAngar->size = value;
-    globals_status->m_pStationInfo->m_pShipsInAngar->size2 = value;
+    globals_status->m_pStationInfo->m_pShipsInHangar->size = value;
+    globals_status->m_pStationInfo->m_pShipsInHangar->size2 = value;
 }
 
-void Station::setangarshipid(int id, int value)
+void Station::sethangarshipinfo(int id, sol::table shipinfo)
 {
-    if (globals_status->m_pStationInfo->m_pShipsInAngar == nullptr)
+    if (globals_status->m_pStationInfo->m_pShipsInHangar == nullptr)
         return;
     unsigned int offset = (id == 0) ? 0 : (1 << (id + 1));
-    auto* shipsarray = globals_status->m_pStationInfo->m_pShipsInAngar;
+    auto* shipsarray = globals_status->m_pStationInfo->m_pShipsInHangar;
     uint8_t* arraydata = reinterpret_cast<uint8_t*>(shipsarray->data);
-    SingleItem** ship_ptr = reinterpret_cast<SingleItem**>(arraydata + offset);
+    ShipInfo** ship_ptr = reinterpret_cast<ShipInfo**>(arraydata + offset);
     
-    if (*ship_ptr)
-        (*ship_ptr)->m_nID = value;
+    if (*ship_ptr) {
+        (*ship_ptr)->m_nID = shipinfo["id"].get_or<int>((*ship_ptr)->m_nID);
+        (*ship_ptr)->m_nPrice = shipinfo["price"].get_or<int>((*ship_ptr)->m_nPrice);
+    }
 }
 
 int Station::getagentscount()
@@ -150,8 +152,8 @@ int Station::create(const std::string& str, int techlevel, int textureid, int sy
     s.techlevel = techlevel;
     s.textureid = textureid;
     s.unk0 = 0; s.unk1 = 0; s.unk2 = 0;
-    s.m_pShipsInAngar = 0;
-    s.m_pItemsInAngar = 0;
+    s.m_pShipsInHangar = 0;
+    s.m_pItemsInHangar = 0;
     s.m_pAgents = 0;
 
     created_stations.push_back(s);
@@ -184,7 +186,7 @@ void Station::createagent(const std::string& name, int factiontype, int terranwo
         std::cout << "[-] Cannot create agent '" << name << "' because its missing the agentinfo table !" << std::endl;
         return;
     }
-    Sleep(1); // hell no
+    Sleep(1); // TODO: hell no | sleep 1 bcz the eventmanager is goofy :skull:
     SingleStation* station = globals_status->m_pStationInfo;
     AEArray<SingleAgent*>* oldarray = reinterpret_cast<AEArray<SingleAgent*>*>(station->m_pAgents);
     if (oldarray != nullptr && oldarray->size2 == 7) {

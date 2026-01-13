@@ -86,14 +86,14 @@ void LuaManager::bind_api()
         "id", sol::property(&Station::getid, &Station::setid),
         "name", sol::property(&Station::getname, &Station::setname),
         "level", sol::property(&Station::gettechlevel, &Station::settechlevel),
-        "angaritemscount", sol::property(&Station::getangaritemscount, &Station::setangaritemscount),
-        "angarshipscount", sol::property(&Station::getangarshipscount, &Station::setangarshipscount),
+        "hangaritemscount", sol::property(&Station::gethangaritemscount, &Station::sethangaritemscount),
+        "hangarshipscount", sol::property(&Station::gethangarshipscount, &Station::sethangarshipscount),
         "agentscount", sol::property(&Station::getagentscount, &Station::setagentscount),
         "IsVoid", [](Station& self) -> bool {
             return Station::isvoid();
         },
-        "SetAngarShipId", [](Station& self, int id, int value) {
-            Station::setangarshipid(id, value);
+        "SetHangarShipInfo", [](Station& self, int id, sol::table shipinfo) {
+            Station::sethangarshipinfo(id, shipinfo);
         },
         "Create", [](Station& self, const std::string& str, int techlevel, int textureid, int systemid) {
             return Station::create(str, techlevel, textureid, systemid);

@@ -90,14 +90,14 @@ int Player::getmaxshiphealth()
 {
    if (globals_status->m_pShipInfo == nullptr) 
         return 0;
-    return globals_status->m_pShipInfo->m_nMaxShipHealth;
+    return globals_status->m_pShipInfo->m_nMaxHealth;
 }
 
 void Player::setmaxshiphealth(int value)
 {
    if (globals_status->m_pShipInfo == nullptr) 
         return;
-    globals_status->m_pShipInfo->m_nMaxShipHealth = value;
+    globals_status->m_pShipInfo->m_nMaxHealth = value;
 }
 
 int Player::getenemieskilled()

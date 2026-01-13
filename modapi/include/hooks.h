@@ -6,6 +6,7 @@ class Hooks {
     private:
         static constexpr uintptr_t GLOBALS_INIT_ADDR = 0x0044B20C;
         static constexpr uintptr_t GLOBALS_GALAXY = 0x0060AF3C;
+        static constexpr uintptr_t GLOBALS_ITEMS = 0x0060AEA4;
         static constexpr uintptr_t FILEREAD_LOADSTATIONBINARYFROMID = 0x408880;
         static constexpr uintptr_t FILEREAD_LOADSTATIONBIRARY = 0x408C4B;
 
@@ -22,6 +23,7 @@ class Hooks {
         static uintptr_t __stdcall fileread_loadstationbinary_hook(SingleSystem *system);
 
         static void injectsystemsandstations(void);
+        static void injectitems(void);
     public:
         static void init(void);
 };

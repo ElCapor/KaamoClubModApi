@@ -13,15 +13,15 @@ class Station {
         static void setname(const std::string value);
         static int gettechlevel(void);
         static void settechlevel(int value);
-        static int getangaritemscount(void);
-        static void setangaritemscount(int value);
-        static int getangarshipscount(void);
-        static void setangarshipscount(int value);
+        static int gethangaritemscount(void);
+        static void sethangaritemscount(int value);
+        static int gethangarshipscount(void);
+        static void sethangarshipscount(int value);
         static int getagentscount();
         static void setagentscount(int value);
 
         static bool isvoid(void);
-        static void setangarshipid(int id, int value);
+        static void sethangarshipinfo(int id, sol::table shipinfo);
         static int create(const std::string& str, int techlevel, int textureid, int systemid);
         static std::string getagentname(int id);
         static int getagentfaction(int id);

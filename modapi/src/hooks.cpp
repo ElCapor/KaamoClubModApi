@@ -9,6 +9,32 @@ Hooks::globals_init Hooks::oldglobals_init = nullptr;
 Hooks::fileread_loadstationbinaryfromid Hooks::old_filereadloadstationbinaryfromid = nullptr;
 Hooks::fileread_loadstationbinary Hooks::old_filereadloadstationbinary = nullptr;
 
+void Hooks::injectitems()
+{
+    auto* itemsarray = (Items*)GLOBALS_ITEMS;
+    if (!itemsarray || !itemsarray->items)
+        return;
+    auto* old_array = itemsarray->items;
+    uint32_t old_count = old_array->size;
+    uint32_t new_count = old_count + 1;
+    auto* new_array = reinterpret_cast<AEArray<SingleItem*>*>(AbyssEngine::memory_allocate(sizeof(AEArray<SingleItem*>)));
+    new_array->size = new_array->size2 = new_count;
+    new_array->data = reinterpret_cast<SingleItem**>(AbyssEngine::memory_allocate(sizeof(SingleItem*) * new_count));
+    memcpy(new_array->data, old_array->data, sizeof(SingleItem*) * old_count);
+    if (old_count > 0) {
+        SingleItem* first_item = old_array->data[0];
+        auto* cloned_item = reinterpret_cast<SingleItem*>(AbyssEngine::memory_allocate(sizeof(SingleItem)));
+        if (cloned_item) {
+            memcpy(cloned_item, first_item, sizeof(SingleItem));
+            cloned_item->m_nID = 196;            
+            new_array->data[old_count] = cloned_item;
+        }
+    }
+    itemsarray->items = new_array;
+    AbyssEngine::memory_free(old_array->data);
+    AbyssEngine::memory_free(old_array);
+}
+
 void Hooks::injectsystemsandstations()
 {
     auto* galaxy = *(Galaxy**)GLOBALS_GALAXY;

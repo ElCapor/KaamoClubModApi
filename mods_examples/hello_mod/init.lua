@@ -43,9 +43,13 @@ end)
 
 RegisterEvent("OnStationDocked", function()
 	print("Docked on this station: " .. station.name)
-	--local randomship = math.random(1,29)
-	--print("Setting the first ship of the angar to : " .. randomship)
-	--station:SetAngarShipId(0, randomship)
+	--local shipinfo = {
+	--	id = 0,
+	--	price = 10
+	--}
+	--shipinfo["id"] = math.random(1,29)
+	--print(shipinfo["id"])
+	--station:SetHangarShipInfo(0, shipinfo)
 end)
 
 RegisterEvent("IsInMainMenu", function()
@@ -73,8 +77,8 @@ RegisterEvent("OnSystemChanged", function(id)
 	print("Station name : " .. station.name)
 	print("Station level : " .. station.level)
 	print("Station id : " .. station.id)
-	print("Station angar items count : " .. station.angaritemscount)
-	print("Station angar ships count : " .. station.angarshipscount)
+	print("Station angar items count : " .. station.hangaritemscount)
+	print("Station angar ships count : " .. station.hangarshipscount)
 	print("Station agents count : " .. station.agentscount)
 	for i = 0, station.agentscount - 1 do
 		print("Station agent #" .. i .. " name: " .. station:GetAgentName(i) .. " | faction: " .. station:GetAgentFaction(i))

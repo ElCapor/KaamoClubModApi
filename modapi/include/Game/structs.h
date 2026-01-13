@@ -94,35 +94,9 @@ struct SingleAgent {
     int field_80;
 };
 
-struct SingleStation {
-    AEString name;
-    int id;
-    int systemid;
-    int unk0;
-    int textureid;
-    int unk1;
-    int techlevel;
-    int unk2;
-    AEArray<SingleItem>* m_pItemsInAngar;
-    AEArray<SingleItem>* m_pShipsInAngar;
-    AEArray<SingleAgent>* m_pAgents;
-};
-
-struct Galaxy {
-    uint8_t* stations;
-    AEArray<SingleSystem*>* systems;
-};
-
-struct ShipItems {
-    int m_nPrimary;
-    int m_nSecondary;
-    int m_nTurret;
-    int m_nEquipment;
-};
-
 struct ShipInfo {
-    int m_nShipId;
-    int m_nMaxShipHealth;
+    int m_nID;
+    int m_nMaxHealth;
     int m_nBasePrice;
     int m_nMaxCapacity;
     int m_nCurrentCapacity;
@@ -152,6 +126,36 @@ struct ShipInfo {
     int* m_pShipInformation;
     AEArray<SingleItem>* m_pShipEquipment;
     AEArray<SingleItem>* m_pShipItems;
+};
+
+struct SingleStation {
+    AEString name;
+    int id;
+    int systemid;
+    int unk0;
+    int textureid;
+    int unk1;
+    int techlevel;
+    int unk2;
+    AEArray<SingleItem>* m_pItemsInHangar;
+    AEArray<ShipInfo>* m_pShipsInHangar;
+    AEArray<SingleAgent>* m_pAgents;
+};
+
+struct Galaxy {
+    uint8_t* stations;
+    AEArray<SingleSystem*>* systems;
+};
+
+struct Items {
+    AEArray<SingleItem*>* items;
+};
+
+struct ShipItems {
+    int m_nPrimary;
+    int m_nSecondary;
+    int m_nTurret;
+    int m_nEquipment;
 };
 
 struct ResourceInfo {
