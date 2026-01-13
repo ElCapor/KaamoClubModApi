@@ -19,7 +19,7 @@ DWORD WINAPI MainThread(LPVOID lpParam) {
     ModApiUtils::load_mods(luamanager);
     EventManager::earlyinit_event();
     Hooks::init();
-    Player::init(luamanager->lua_state.lua_state());
+    Player::init(luamanager->getluastate());
     System::init();
     Station::init();
     Mission::init();

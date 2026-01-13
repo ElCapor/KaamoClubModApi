@@ -21,11 +21,12 @@
 #include <Game/asset.h>
 
 class LuaManager {
-    public:
+    private:
         sol::state lua_state;
-
+    public:
         void init(void);
         void bind_api(void);
         void execute_script(const std::string& filepath);
+        lua_State* getluastate(void);
 };
 #endif

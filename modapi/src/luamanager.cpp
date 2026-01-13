@@ -151,3 +151,8 @@ void LuaManager::execute_script(const std::string& filepath)
         std::cout << "[LuaManager] Lua exception: " << e.what() << std::endl;
     }
 }
+
+lua_State* LuaManager::getluastate()
+{
+    return lua_state.lua_state();
+}
