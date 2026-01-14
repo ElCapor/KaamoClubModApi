@@ -8,5 +8,6 @@ class Asset {
         static void init(void);
         static std::string getassetfilepath(unsigned int id);
         static void setassetfilepath(unsigned int id, const std::string value);
+        static std::string gettext(int id);
 };
 #endif

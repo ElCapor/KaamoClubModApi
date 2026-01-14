@@ -20,6 +20,7 @@ end)
 RegisterEvent("OnAsteroidDestroyed", function(count)
 	if not isingame then return end
 	print("New asteroid destroyed : " .. count)
+	--mission:NextCampaignMission()
 end)
 
 RegisterEvent("OnEnemieKilled", function(count)
@@ -57,6 +58,11 @@ RegisterEvent("OnStationDocked", function()
 	--	maxhealth = 9999
 	--}
 	--player:SetShipInfo(shipinfo)
+	--for i = 0, 90000 do
+	--	if asset:GetText(i) == "Error Language" then return end
+	--	print("text: " .. asset:GetText(i) .. " id : " .. i)
+	--end
+	--print(asset:GetText(1059))
 end)
 
 RegisterEvent("IsInMainMenu", function()

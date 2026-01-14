@@ -13,5 +13,6 @@ class Mission {
         static void setcompletedsidemissions(int value);
         
         static void enablevalkyrie(void);
+        static void nextcampaignmission();
 };
 #endif

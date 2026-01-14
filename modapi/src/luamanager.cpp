@@ -80,6 +80,9 @@ void LuaManager::bind_api()
         "completedsidemissions", sol::property(&Mission::getcompletedsidemissions, &Mission::setcompletedsidemissions),
         "EnableValkyrie", [](Mission& self) {
             Mission::enablevalkyrie();
+        },
+        "NextCampaignMission", [](Mission& self) {
+            Mission::nextcampaignmission();
         }
     );
 
@@ -118,6 +121,9 @@ void LuaManager::bind_api()
         },
         "SetAssetFilePath", [](Asset& self, unsigned int id, const std::string filepath) {
             Asset::setassetfilepath(id, filepath);
+        },
+        "GetText", [](Asset& self, int id) -> std::string {
+            return Asset::gettext(id);
         }
     );
 

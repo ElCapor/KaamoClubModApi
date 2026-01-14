@@ -2,15 +2,15 @@
 #define STRUCTS_H
 
 struct AEString {
-    wchar_t* text; 
-    uint32_t size; 
+    wchar_t* text;
+    uint32_t size;
 };
 
 template<typename T>
 struct AEArray {
-    uint32_t size; 
+    uint32_t size;
     T* data;
-    uint32_t size2; 
+    uint32_t size2;
 };
 
 struct Vector3Int {

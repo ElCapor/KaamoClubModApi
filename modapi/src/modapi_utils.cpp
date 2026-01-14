@@ -5,6 +5,7 @@
 #include <filesystem>
 #include <tlhelp32.h>
 #include <vector>
+#include <codecvt>
 #include <sol/sol.hpp>
 #include <map>
 #include <string>
@@ -94,4 +95,12 @@ void ModApiUtils::load_mods(LuaManager *luamanager)
             }
         }
     }    
+}
+
+// credits https://gist.github.com/danzek/d6a0e4a48a5439e7f808ed1497f6268e
+std::string ModApiUtils::w2s(const std::wstring& wstr)
+{
+    using convert_typeX = std::codecvt_utf8<wchar_t>;
+    std::wstring_convert<convert_typeX, wchar_t> converterX;
+    return converterX.to_bytes(wstr);
 }

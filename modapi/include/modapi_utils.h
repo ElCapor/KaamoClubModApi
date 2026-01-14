@@ -26,5 +26,6 @@ class ModApiUtils {
     public:
         static void suspendgame(bool suspend);
         static void load_mods(LuaManager *luamanager);
+        static std::string w2s(const std::wstring& wstr);
 };
 #endif
