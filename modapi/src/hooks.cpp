@@ -8,6 +8,7 @@
 Hooks::globals_init Hooks::oldglobals_init = nullptr;
 Hooks::fileread_loadstationbinaryfromid Hooks::old_filereadloadstationbinaryfromid = nullptr;
 Hooks::fileread_loadstationbinary Hooks::old_filereadloadstationbinary = nullptr;
+Hooks::standing_isenemy Hooks::old_standingisenemy = nullptr;
 
 void Hooks::injectitems()
 {
@@ -22,11 +23,11 @@ void Hooks::injectitems()
     new_array->data = reinterpret_cast<SingleItem**>(AbyssEngine::memory_allocate(sizeof(SingleItem*) * new_count));
     memcpy(new_array->data, old_array->data, sizeof(SingleItem*) * old_count);
     if (old_count > 0) {
-        SingleItem* first_item = old_array->data[0];
+        SingleItem* first_item = old_array->data[195];
         auto* cloned_item = reinterpret_cast<SingleItem*>(AbyssEngine::memory_allocate(sizeof(SingleItem)));
         if (cloned_item) {
             memcpy(cloned_item, first_item, sizeof(SingleItem));
-            cloned_item->m_nID = 196;            
+            cloned_item->m_nID = 196;
             new_array->data[old_count] = cloned_item;
         }
     }
@@ -171,11 +172,17 @@ uintptr_t __stdcall Hooks::globals_init_hook(uintptr_t a, uintptr_t b, uintptr_t
         called_once = true;
         CreateThread(nullptr, 0, [](LPVOID)->DWORD {
             Patches::patchmissions(100);
+            //Hooks::injectitems();
             Hooks::injectsystemsandstations();
             return 0;
         }, nullptr, 0, nullptr);
     }
     return old;
+}
+
+bool __fastcall Hooks::standing_isenemy_hook(uintptr_t standing, int race)
+{
+    return true;
 }
 
 void Hooks::init()
@@ -184,5 +191,6 @@ void Hooks::init()
     MH_CreateHook((LPVOID)GLOBALS_INIT_ADDR, &globals_init_hook, (LPVOID*)&oldglobals_init);
     MH_CreateHook((LPVOID)FILEREAD_LOADSTATIONBINARYFROMID, &fileread_loadstationbinaryfromid_hook, (LPVOID*)&old_filereadloadstationbinaryfromid);
     MH_CreateHook((LPVOID)FILEREAD_LOADSTATIONBIRARY, &fileread_loadstationbinary_hook, (LPVOID*)&old_filereadloadstationbinary);
+    //MH_CreateHook((LPVOID)STANDING_ISENEMY, &standing_isenemy_hook, (LPVOID*)&old_standingisenemy);
     MH_EnableHook(MH_ALL_HOOKS);
 }

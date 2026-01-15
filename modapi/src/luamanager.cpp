@@ -50,6 +50,15 @@ void LuaManager::bind_api()
         },
         "SetShipInfo", [](Player& self, sol::table shipinfo) {
             Player::setshipinfo(shipinfo);
+        },
+        "HasJumpDrive", [](Player& self) -> bool {
+            return Player::hasjumpdrive();
+        },
+        "ToggleCloaking", [](Player& self) {
+            Player::togglecloaking();
+        },
+        "SetPosition", [](Player& self, float x, float y, float z) {
+            Player::setposition(x, y, z);
         }
     );
 

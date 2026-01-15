@@ -38,6 +38,41 @@ void Player::setmoney(int value)
     globals_status->m_nMoney = value;
 }
 
+void Player::togglecloaking()
+{
+    uintptr_t address = 0x004ABA3B;
+    MGame* mgame = reinterpret_cast<MGame*>(globals_appmanager->m_pCurrentModule);
+    PlayerEgo* playerego = mgame->m_pPlayerEgo;
+
+    if (!playerego) {
+        std::cout << "[-] Cannot call Player::togglecloaking because MGame isn't init!" << std::endl;
+        return;
+    }
+    __asm {
+        mov ebx, playerego
+        call address
+    }
+}
+
+void Player::setposition(float x, float y, float z)
+{
+    uintptr_t address = 0x004AC590;
+    MGame* mgame = reinterpret_cast<MGame*>(globals_appmanager->m_pCurrentModule);
+    PlayerEgo* playerego = mgame->m_pPlayerEgo;
+
+    if (!playerego) {
+        std::cout << "[-] Cannot call Player::setposition because MGame isn't init!" << std::endl;
+        return;
+    }
+    __asm {
+        push z
+        push y
+        push x
+        mov eax, playerego
+        call address
+    }
+}
+
 sol::table Player::getshipinfo()
 {
     sol::state_view lua(lstate);
@@ -79,6 +114,20 @@ bool Player::hasshiparmor()
     if (getshipinfo()["armor"] != 0)
         return true;
     return false;
+}
+
+bool Player::hasjumpdrive()
+{
+    int hasdrive = 0;
+    uintptr_t address = 0x004C2F11;
+    ShipInfo* shipinfo = globals_status->m_pShipInfo;
+
+    __asm {
+        mov eax, shipinfo
+        call address
+        mov hasdrive, eax
+    }
+    return hasdrive != 0;
 }
 
 int Player::getenemieskilled()

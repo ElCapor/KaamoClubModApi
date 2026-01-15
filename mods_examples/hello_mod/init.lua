@@ -21,6 +21,8 @@ RegisterEvent("OnAsteroidDestroyed", function(count)
 	if not isingame then return end
 	print("New asteroid destroyed : " .. count)
 	--mission:NextCampaignMission()
+	--player:ToggleCloaking()
+	--player:SetPosition(10,10,10)
 end)
 
 RegisterEvent("OnEnemieKilled", function(count)
@@ -110,6 +112,9 @@ RegisterEvent("OnSystemChanged", function(id)
 	print("Player current mission : " .. mission.id)
 	if player:HasShipArmor() then
 		print("The ship has an armor")
+	end
+	if player:HasJumpDrive() then
+		print("The ship has a jump drive")
 	end
 	if player:IsDocked() then
 		print("player is docked in a station")

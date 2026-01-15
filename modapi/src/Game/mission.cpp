@@ -49,9 +49,6 @@ void Mission::enablevalkyrie()
 
 void Mission::nextcampaignmission()
 {
-    //typedef void(__stdcall* func)(Globals_status* globals_status);
-    //func fn = reinterpret_cast<func>(0x004D605F);
-    //fn(globals_status);
     uintptr_t address = 0x004D605F;
     __asm {
         mov ecx, globals_status

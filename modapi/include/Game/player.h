@@ -28,5 +28,8 @@ class Player {
         static bool hasshiparmor(void);
         static bool isdocked(void);
         static sol::table getshipinfo(void);
+        static bool hasjumpdrive(void);
+        static void togglecloaking(void);
+        static void setposition(float x, float y, float z);
 };
 #endif
