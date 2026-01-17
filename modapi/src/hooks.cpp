@@ -29,8 +29,8 @@ void Hooks::injectitems()
     newitem->m_nType = 3;
     newitem->m_nSubType = 14;
     newitem->m_nTechLevel = 8;
-    newitem->m_nLowestPriceSystemId = 10;
-    newitem->m_nHighestPriceSystemId = 4;
+    newitem->m_nLowestPriceSystemId = 0; // KEEP IT TO 0 OR ELSE THE GAME GOES BOOM BOOM ON CUSTOM AGENTS
+    newitem->m_nHighestPriceSystemId = 0; // KEEP IT TO 0 OR ELSE THE GAME GOES BOOM BOOM ON CUSTOM AGENTS
     newitem->m_nPrice = 80000;
     newitem->m_nOccurance = 0;
     newitem->m_nMinPrice = 70000;
@@ -45,8 +45,9 @@ void Hooks::injectitems()
     AEArray<ItemInfo>* iteminfoarr = reinterpret_cast<AEArray<ItemInfo>*>(AbyssEngine::memory_allocate(sizeof(AEArray<ItemInfo>)));
     iteminfoarr->size = 28;
     iteminfoarr->size2 = 28;
-    iteminfoarr->data = reinterpret_cast<ItemInfo*>(AbyssEngine::memory_allocate(sizeof(ItemInfo) * iteminfoarr->size));
+    iteminfoarr->data = reinterpret_cast<ItemInfo*>(AbyssEngine::memory_allocate(sizeof(ItemInfo)));
     memset(iteminfoarr->data, 0, iteminfoarr->size);
+    //memcpy(iteminfoarr->data, old_array->data[195]->m_pItemInfo, sizeof(ItemInfo) * 28);
     ItemInfo* info = iteminfoarr->data; 
     info->field_0 = 0;
     info->m_nID = 196;
@@ -56,8 +57,8 @@ void Hooks::injectitems()
     info->m_nSubType = 14;
     info->field_18 = 3;
     info->m_nTechLevel = 8;
-    info->m_nHighestPriceSystemId = 4;
-    info->m_nLowestPriceSystemId = 10;
+    info->m_nHighestPriceSystemId = 1;
+    info->m_nLowestPriceSystemId = 1;
     info->field_28 = 5;
     info->field_2C = 4;
     info->field_30 = 6;
