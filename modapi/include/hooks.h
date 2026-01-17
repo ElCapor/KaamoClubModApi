@@ -10,6 +10,7 @@ class Hooks {
         static constexpr uintptr_t FILEREAD_LOADSTATIONBINARYFROMID = 0x408880;
         static constexpr uintptr_t FILEREAD_LOADSTATIONBIRARY = 0x408C4B;
         static constexpr uintptr_t STANDING_ISENEMY = 0x4CE34B;
+        static constexpr uintptr_t ABYSSENGINE_PAINTCANVAS_SETCOLOR = 0x4EC3E0;
 
         using globals_init = uintptr_t (__stdcall*)(uintptr_t, uintptr_t, uintptr_t);
         static globals_init oldglobals_init;
@@ -26,6 +27,10 @@ class Hooks {
         using standing_isenemy = bool (__fastcall*)(uintptr_t standing, int race);
         static standing_isenemy old_standingisenemy;
         static bool __fastcall standing_isenemy_hook(uintptr_t standing, int race);
+
+        using abyssengine_paintcanvas_setcolor = void (__fastcall*)(uintptr_t paintcanvas);
+        static abyssengine_paintcanvas_setcolor old_abyssenginepaintcanvassetcolor;
+        static void __fastcall abyssengine_paintcanvas_setcolor_hook(uintptr_t paintcanvas);
 
         static void injectsystemsandstations(void);
         static void injectitems(void);

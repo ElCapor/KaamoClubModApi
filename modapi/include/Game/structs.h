@@ -19,6 +19,37 @@ struct Vector3Int {
     int32_t z; 
 };
 
+struct ItemInfo {
+    int field_0;
+    int m_nID;
+    int m_bIsThermo; // uh weird
+    int m_nType;
+    int field_10;
+    int m_nSubType;
+    int field_18;
+    int m_nTechLevel;
+    int m_nHighestPriceSystemId;
+    int m_nLowestPriceSystemId;
+    int field_28;
+    int field_2C;
+    int field_30;
+    int field_34;
+    int field_38;
+    int field_3C;
+    int field_40;
+    int m_nPrice;
+    int field_48;
+    int m_nEffect;
+    int m_nPropertyOne; // uh weird
+    int m_nLoadingSpeed;
+    int m_nPropertyTwo;
+    int m_nBoostDuration;
+    int m_nPropertyThree;
+    int field_64;
+    int m_nPropertyFour;
+    int field_6C;
+};
+
 struct SingleItem {
    int m_nID;
    int m_nType;
@@ -29,10 +60,14 @@ struct SingleItem {
    int m_nPrice;
    int m_nOccurance;
    int m_nMinPrice;
-   int maxPrice;
-   int amount;
-   int stationAmount;
-   int blueprintAmount;
+   int m_nMaxPrice;
+   int m_nAmount;
+   int m_nStationAmount;
+   AEArray<ItemInfo>* m_pItemInfo;
+   int field_34;
+   int field_38;
+   int field_3C;
+   int field_40;
 };
 
 struct SingleSystem {

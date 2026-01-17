@@ -15,7 +15,7 @@ void Asset::init()
     while (globals_canvas == nullptr) {
         globals_canvas = *reinterpret_cast<Globals_Canvas**>(base + 0x20AE68); // Globals::Canvas
         if (globals_canvas == nullptr) 
-            std::this_thread::sleep_for(std::chrono::milliseconds(1000));
+            std::this_thread::sleep_for(std::chrono::milliseconds(1100));
     }
     auto end = std::chrono::high_resolution_clock::now();
     auto duration = std::chrono::duration_cast<std::chrono::milliseconds>(end - start).count();

@@ -9,29 +9,80 @@ Hooks::globals_init Hooks::oldglobals_init = nullptr;
 Hooks::fileread_loadstationbinaryfromid Hooks::old_filereadloadstationbinaryfromid = nullptr;
 Hooks::fileread_loadstationbinary Hooks::old_filereadloadstationbinary = nullptr;
 Hooks::standing_isenemy Hooks::old_standingisenemy = nullptr;
+Hooks::abyssengine_paintcanvas_setcolor Hooks::old_abyssenginepaintcanvassetcolor = nullptr;
 
 void Hooks::injectitems()
 {
-    auto* itemsarray = (Items*)GLOBALS_ITEMS;
+    Items* itemsarray = (Items*)GLOBALS_ITEMS;
     if (!itemsarray || !itemsarray->items)
         return;
-    auto* old_array = itemsarray->items;
-    uint32_t old_count = old_array->size;
-    uint32_t new_count = old_count + 1;
-    auto* new_array = reinterpret_cast<AEArray<SingleItem*>*>(AbyssEngine::memory_allocate(sizeof(AEArray<SingleItem*>)));
-    new_array->size = new_array->size2 = new_count;
-    new_array->data = reinterpret_cast<SingleItem**>(AbyssEngine::memory_allocate(sizeof(SingleItem*) * new_count));
-    memcpy(new_array->data, old_array->data, sizeof(SingleItem*) * old_count);
-    if (old_count > 0) {
-        SingleItem* first_item = old_array->data[195];
-        auto* cloned_item = reinterpret_cast<SingleItem*>(AbyssEngine::memory_allocate(sizeof(SingleItem)));
-        if (cloned_item) {
-            memcpy(cloned_item, first_item, sizeof(SingleItem));
-            cloned_item->m_nID = 196;
-            new_array->data[old_count] = cloned_item;
-        }
-    }
+    AEArray<SingleItem*>* old_array = itemsarray->items;
+    int newcount = old_array->size + 1;
+    AEArray<SingleItem*>* new_array = reinterpret_cast<AEArray<SingleItem*>*>(AbyssEngine::memory_allocate(sizeof(AEArray<SingleItem*>)));
+    new_array->size = newcount;
+    new_array->size2 = newcount;
+    new_array->data = reinterpret_cast<SingleItem**>(AbyssEngine::memory_allocate(sizeof(SingleItem*) * newcount));
+    memset(new_array->data, 0, sizeof(SingleItem*) * newcount);
+    memcpy(new_array->data, old_array->data, sizeof(SingleItem*) * old_array->size);
+    SingleItem* newitem = reinterpret_cast<SingleItem*>(AbyssEngine::memory_allocate(sizeof(SingleItem)));
+    newitem->m_nID = 196;
+    newitem->m_nType = 3;
+    newitem->m_nSubType = 14;
+    newitem->m_nTechLevel = 8;
+    newitem->m_nLowestPriceSystemId = 10;
+    newitem->m_nHighestPriceSystemId = 4;
+    newitem->m_nPrice = 80000;
+    newitem->m_nOccurance = 0;
+    newitem->m_nMinPrice = 70000;
+    newitem->m_nMaxPrice = 90000;
+    newitem->m_nAmount = 0;
+    newitem->m_nStationAmount = 0;
+    newitem->field_34 = 0;
+    newitem->field_38 = 0;
+    newitem->field_3C = 0;
+    newitem->field_40 = 0;
+
+    AEArray<ItemInfo>* iteminfoarr = reinterpret_cast<AEArray<ItemInfo>*>(AbyssEngine::memory_allocate(sizeof(AEArray<ItemInfo>)));
+    iteminfoarr->size = 28;
+    iteminfoarr->size2 = 28;
+    iteminfoarr->data = reinterpret_cast<ItemInfo*>(AbyssEngine::memory_allocate(sizeof(ItemInfo) * iteminfoarr->size));
+    memset(iteminfoarr->data, 0, iteminfoarr->size);
+    ItemInfo* info = iteminfoarr->data; 
+    info->field_0 = 0;
+    info->m_nID = 196;
+    info->m_bIsThermo = 1; 
+    info->m_nType = 3;
+    info->field_10 = 2;
+    info->m_nSubType = 14;
+    info->field_18 = 3;
+    info->m_nTechLevel = 8;
+    info->m_nHighestPriceSystemId = 4;
+    info->m_nLowestPriceSystemId = 10;
+    info->field_28 = 5;
+    info->field_2C = 4;
+    info->field_30 = 6;
+    info->field_34 = 0;
+    info->field_38 = 7;
+    info->field_3C = 72500;
+    info->field_40 = 8;
+    info->m_nPrice = 80000;
+    info->field_48 = 25;
+    info->m_nEffect = 300;
+    info->m_nPropertyOne = 26;
+    info->m_nLoadingSpeed = 100;
+    info->m_nPropertyTwo = 27;
+    info->m_nBoostDuration = 90000;
+    info->m_nPropertyThree = 44;
+    info->field_64 = 0;
+    info->m_nPropertyFour = 45;
+    info->field_6C = 107;
+    
+    //iteminfoarr->data = iteminfo;
+    newitem->m_pItemInfo = iteminfoarr;
+
+    new_array->data[196] = newitem;
     itemsarray->items = new_array;
+    // I'm not freeing old_array->data[i]->m_pItemInfo array because I did a memcpy of old array to new array and I don't want to realloc every item info it's kinda useless
     AbyssEngine::memory_free(old_array->data);
     AbyssEngine::memory_free(old_array);
 }
@@ -185,6 +236,22 @@ bool __fastcall Hooks::standing_isenemy_hook(uintptr_t standing, int race)
     return true;
 }
 
+void __fastcall Hooks::abyssengine_paintcanvas_setcolor_hook(uintptr_t paintcanvas)
+{
+    unsigned int hexcolor;
+
+    // the game puts the color in eax......
+    __asm {
+        mov hexcolor, eax
+    }
+    //hexcolor = 0x00ff00ff; // r,g,b,a | ff = 255
+    __asm {
+        mov ecx, paintcanvas
+        mov eax, hexcolor
+        call old_abyssenginepaintcanvassetcolor
+    }
+}
+
 void Hooks::init()
 {
     MH_Initialize();
@@ -192,5 +259,6 @@ void Hooks::init()
     MH_CreateHook((LPVOID)FILEREAD_LOADSTATIONBINARYFROMID, &fileread_loadstationbinaryfromid_hook, (LPVOID*)&old_filereadloadstationbinaryfromid);
     MH_CreateHook((LPVOID)FILEREAD_LOADSTATIONBIRARY, &fileread_loadstationbinary_hook, (LPVOID*)&old_filereadloadstationbinary);
     //MH_CreateHook((LPVOID)STANDING_ISENEMY, &standing_isenemy_hook, (LPVOID*)&old_standingisenemy);
+    MH_CreateHook((LPVOID)ABYSSENGINE_PAINTCANVAS_SETCOLOR, &abyssengine_paintcanvas_setcolor_hook, (LPVOID*)&old_abyssenginepaintcanvassetcolor);
     MH_EnableHook(MH_ALL_HOOKS);
 }
