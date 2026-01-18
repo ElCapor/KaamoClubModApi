@@ -29,14 +29,15 @@ void Hooks::injectitems()
     newitem->m_nType = 3;
     newitem->m_nSubType = 14;
     newitem->m_nTechLevel = 8;
-    newitem->m_nLowestPriceSystemId = 0; // KEEP IT TO 0 OR ELSE THE GAME GOES BOOM BOOM ON CUSTOM AGENTS
-    newitem->m_nHighestPriceSystemId = 0; // KEEP IT TO 0 OR ELSE THE GAME GOES BOOM BOOM ON CUSTOM AGENTS
-    newitem->m_nPrice = 80000;
+    newitem->m_nLowestPriceSystemId = 10;
+    newitem->m_nHighestPriceSystemId = 4;
+    newitem->m_nPrice = 77937;
     newitem->m_nOccurance = 0;
-    newitem->m_nMinPrice = 70000;
-    newitem->m_nMaxPrice = 90000;
+    newitem->m_nMinPrice = 72500;
+    newitem->m_nMaxPrice = 83375;
     newitem->m_nAmount = 0;
     newitem->m_nStationAmount = 0;
+    newitem->m_pItemInfo = 0;
     newitem->field_34 = 0;
     newitem->field_38 = 0;
     newitem->field_3C = 0;
@@ -47,18 +48,17 @@ void Hooks::injectitems()
     iteminfoarr->size2 = 28;
     iteminfoarr->data = reinterpret_cast<ItemInfo*>(AbyssEngine::memory_allocate(sizeof(ItemInfo)));
     memset(iteminfoarr->data, 0, iteminfoarr->size);
-    //memcpy(iteminfoarr->data, old_array->data[195]->m_pItemInfo, sizeof(ItemInfo) * 28);
-    ItemInfo* info = iteminfoarr->data; 
+    ItemInfo* info = iteminfoarr->data;
     info->field_0 = 0;
     info->m_nID = 196;
-    info->m_bIsThermo = 1; 
+    info->m_bIsThermo = 1;
     info->m_nType = 3;
     info->field_10 = 2;
     info->m_nSubType = 14;
     info->field_18 = 3;
     info->m_nTechLevel = 8;
-    info->m_nHighestPriceSystemId = 1;
-    info->m_nLowestPriceSystemId = 1;
+    info->m_nHighestPriceSystemId = 4;
+    info->m_nLowestPriceSystemId = 10;
     info->field_28 = 5;
     info->field_2C = 4;
     info->field_30 = 6;
@@ -66,13 +66,13 @@ void Hooks::injectitems()
     info->field_38 = 7;
     info->field_3C = 72500;
     info->field_40 = 8;
-    info->m_nPrice = 80000;
+    info->m_nPrice = 83375;
     info->field_48 = 25;
     info->m_nEffect = 300;
     info->m_nPropertyOne = 26;
-    info->m_nLoadingSpeed = 100;
+    info->m_nLoadingSpeed = 16000;
     info->m_nPropertyTwo = 27;
-    info->m_nBoostDuration = 90000;
+    info->m_nBoostDuration = 10000;
     info->m_nPropertyThree = 44;
     info->field_64 = 0;
     info->m_nPropertyFour = 45;
@@ -224,8 +224,8 @@ uintptr_t __stdcall Hooks::globals_init_hook(uintptr_t a, uintptr_t b, uintptr_t
         called_once = true;
         CreateThread(nullptr, 0, [](LPVOID)->DWORD {
             Patches::patchmissions(100);
-            //Hooks::injectitems();
             Hooks::injectsystemsandstations();
+            //Hooks::injectitems();
             return 0;
         }, nullptr, 0, nullptr);
     }

@@ -18,8 +18,6 @@
 #include <Game/mission.h>
 #include <Game/asset.h>
 
-// TODO: Check if we are in the game for most of the events because there is the same bug as the ennemie killed event
-
 std::map<std::string, std::vector<sol::protected_function>> EventManager::listeners;
 
 void EventManager::addlistener(std::string eventname, sol::protected_function callback)
@@ -32,12 +30,24 @@ void EventManager::clearlisteners()
     listeners.clear();
 }
 
+void EventManager::joingame_event()
+{
+    static Globals_appManager** globals_appmanager = reinterpret_cast<Globals_appManager**>(0x0060AEFC);
+    static bool joinedgame = false;
+
+    if (!joinedgame && (*globals_appmanager)->m_nCurrentModule != 1 && (*globals_appmanager)->m_nCurrentModule != 0) {
+        joinedgame = true;
+        //ModApiUtils::refreshitemsprices();
+        trigger("OnJoinGame");
+    }
+    if (joinedgame && (*globals_appmanager)->m_nCurrentModule == 1)
+        joinedgame = false;
+}
+
 void EventManager::ingame_event()
 {
-    // <1000 because when the game init the pointer it has some random values so the in game event gets triggered
-    // TODO: Do a better ingame event impl because if we go in game and then go back to the main menu the pointer still has the mission id value
-    // Might now use the appmanager module to check if we are ingame like the ondock event
-    if (Mission::getid() > 0 && Mission::getid() < 1000)
+    static Globals_appManager** globals_appmanager = reinterpret_cast<Globals_appManager**>(0x0060AEFC);
+    if ((*globals_appmanager)->m_nCurrentModule != 1 && (*globals_appmanager)->m_nCurrentModule != 0)
         trigger("IsInGame");
 }
 
@@ -88,8 +98,6 @@ void EventManager::moneychanged_event()
 
 void EventManager::enemiekilled_event()
 {
-    // TODO: Fix the event being triggered one time when we get out of a station
-    // why is it doing that? bcz the game init killed at 0 and static int old is at 0
     static int old = Player::getenemieskilled();
     int current = Player::getenemieskilled();
 
@@ -142,14 +150,19 @@ void EventManager::update_event()
 
 void EventManager::trigger_events()
 {
+    // TODO: clean globals_appmanager bs and put it in a header
+    static Globals_appManager** globals_appmanager = reinterpret_cast<Globals_appManager**>(0x0060AEFC);
     update_event();
-    systemchanged_event();
-    moneychanged_event();
-    mainmenu_event();
     ingame_event();
-    stationchanged_event();
-    stationdocked_event();
-    enemiekilled_event();
-    cargochanged_event();
-    asteroiddestroyed_event();
+    if ((*globals_appmanager)->m_nCurrentModule != 1 && (*globals_appmanager)->m_nCurrentModule != 0) {
+        systemchanged_event();
+        moneychanged_event();
+        stationchanged_event();
+        stationdocked_event();
+        enemiekilled_event();
+        cargochanged_event();
+        asteroiddestroyed_event();
+    }
+    joingame_event();
+    mainmenu_event();
 }

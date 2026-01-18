@@ -118,7 +118,7 @@ void Station::sethangarshipinfo(int id, sol::table shipinfo)
 
 int Station::getagentscount()
 {
-    if (globals_status->m_pStationInfo->m_pAgents == nullptr)
+    if (globals_status->m_pStationInfo->m_pAgents == nullptr) //TODO: Sometimes agents is null if it's in systemchanged event??
         return 0;
     return globals_status->m_pStationInfo->m_pAgents->size;
 }

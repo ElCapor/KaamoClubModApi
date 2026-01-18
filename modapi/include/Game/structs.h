@@ -786,10 +786,10 @@ struct Globals_status {
     int field_1C;
     int field_20;
     AEArray<unsigned int>* m_pSystemVisibilities;
-    int* field_28;
-    int* field_2C;
-    int* field_30;
-    int* field_34;
+    AEArray<unsigned int>* m_pItemLowestPrices;
+    AEArray<unsigned int>* m_pItemHighestPrices;
+    AEArray<unsigned int>* m_pItemLowestPricesSystem;
+    AEArray<unsigned int>* m_pItemHighestPricesSystem;
     int* field_38;
     int* field_3C;
     int* field_40;

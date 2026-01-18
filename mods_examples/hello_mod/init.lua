@@ -1,6 +1,5 @@
 -- even if some code is commented the bindings exist don't worry
 
-isingame = false
 assetchanged = false
 
 function get_every_assets_filepath()
@@ -14,11 +13,14 @@ function get_every_assets_filepath()
 end
 
 RegisterEvent("IsInGame", function()
-	isingame = true
+	-- is in game ticks
+end)
+
+RegisterEvent("OnJoinGame", function()
+	print("joined game")
 end)
 
 RegisterEvent("OnAsteroidDestroyed", function(count)
-	if not isingame then return end
 	print("New asteroid destroyed : " .. count)
 	--mission:NextCampaignMission()
 	--player:ToggleCloaking()
@@ -26,17 +28,14 @@ RegisterEvent("OnAsteroidDestroyed", function(count)
 end)
 
 RegisterEvent("OnEnemieKilled", function(count)
-	if not isingame then return end
 	print("wow congrats you killed " .. count .. " enemies!!!")
 end)
 
 RegisterEvent("OnCargoChanged", function(count)
-	if not isingame then return end
 	print("Current cargo : " .. count)
 end)
 
 RegisterEvent("OnStationChanged", function(id)
-	if not isingame then return end
 	if station:IsVoid() then
 		print("wow you joined the voids!!!")
 		return
@@ -76,12 +75,10 @@ RegisterEvent("IsInMainMenu", function()
 end)
 
 RegisterEvent("OnMoneyChanged", function(money)
-	if not isingame then return end
 	print(money)
 end)
 
 RegisterEvent("OnSystemChanged", function(id)
-	if not isingame then return end
 	print("System id : " .. id)
 	print("System name : " .. system.name)
 	print("System risk : " .. system.risk)

@@ -47,6 +47,7 @@ class EventManager {
         static void enemiekilled_event(void);
         static void cargochanged_event(void);
         static void asteroiddestroyed_event(void);
+        static void joingame_event(void);
     public:
         static inline bool isearlyinit_finished = false;
 
