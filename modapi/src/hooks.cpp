@@ -10,82 +10,28 @@ Hooks::fileread_loadstationbinaryfromid Hooks::old_filereadloadstationbinaryfrom
 Hooks::fileread_loadstationbinary Hooks::old_filereadloadstationbinary = nullptr;
 Hooks::standing_isenemy Hooks::old_standingisenemy = nullptr;
 Hooks::abyssengine_paintcanvas_setcolor Hooks::old_abyssenginepaintcanvassetcolor = nullptr;
+Hooks::gametext_gettext Hooks::old_gametextgettext = nullptr;
+Hooks::recordhandler_recordstorewrite Hooks::old_recordhandlerrecordstorewrite = nullptr;
 
 void Hooks::injectitems()
 {
     Items* itemsarray = (Items*)GLOBALS_ITEMS;
-    if (!itemsarray || !itemsarray->items)
-        return;
     AEArray<SingleItem*>* old_array = itemsarray->items;
-    int newcount = old_array->size + 1;
-    AEArray<SingleItem*>* new_array = reinterpret_cast<AEArray<SingleItem*>*>(AbyssEngine::memory_allocate(sizeof(AEArray<SingleItem*>)));
+    int newcount = old_array->size + (int)Item::created_items.size();
+    AEArray<SingleItem*>* new_array = (AEArray<SingleItem*>*)AbyssEngine::memory_allocate(sizeof(AEArray<SingleItem*>));
     new_array->size = newcount;
     new_array->size2 = newcount;
-    new_array->data = reinterpret_cast<SingleItem**>(AbyssEngine::memory_allocate(sizeof(SingleItem*) * newcount));
-    memset(new_array->data, 0, sizeof(SingleItem*) * newcount);
+    new_array->data = (SingleItem**)AbyssEngine::memory_allocate(sizeof(SingleItem*) * newcount);
     memcpy(new_array->data, old_array->data, sizeof(SingleItem*) * old_array->size);
-    SingleItem* newitem = reinterpret_cast<SingleItem*>(AbyssEngine::memory_allocate(sizeof(SingleItem)));
-    newitem->m_nID = 196;
-    newitem->m_nType = 3;
-    newitem->m_nSubType = 14;
-    newitem->m_nTechLevel = 8;
-    newitem->m_nLowestPriceSystemId = 10;
-    newitem->m_nHighestPriceSystemId = 4;
-    newitem->m_nPrice = 77937;
-    newitem->m_nOccurance = 0;
-    newitem->m_nMinPrice = 72500;
-    newitem->m_nMaxPrice = 83375;
-    newitem->m_nAmount = 0;
-    newitem->m_nStationAmount = 0;
-    newitem->m_pItemInfo = 0;
-    newitem->field_34 = 0;
-    newitem->field_38 = 0;
-    newitem->field_3C = 0;
-    newitem->field_40 = 0;
-
-    AEArray<ItemInfo>* iteminfoarr = reinterpret_cast<AEArray<ItemInfo>*>(AbyssEngine::memory_allocate(sizeof(AEArray<ItemInfo>)));
-    iteminfoarr->size = 28;
-    iteminfoarr->size2 = 28;
-    iteminfoarr->data = reinterpret_cast<ItemInfo*>(AbyssEngine::memory_allocate(sizeof(ItemInfo)));
-    memset(iteminfoarr->data, 0, iteminfoarr->size);
-    ItemInfo* info = iteminfoarr->data;
-    info->field_0 = 0;
-    info->m_nID = 196;
-    info->m_bIsThermo = 1;
-    info->m_nType = 3;
-    info->field_10 = 2;
-    info->m_nSubType = 14;
-    info->field_18 = 3;
-    info->m_nTechLevel = 8;
-    info->m_nHighestPriceSystemId = 4;
-    info->m_nLowestPriceSystemId = 10;
-    info->field_28 = 5;
-    info->field_2C = 4;
-    info->field_30 = 6;
-    info->field_34 = 0;
-    info->field_38 = 7;
-    info->field_3C = 72500;
-    info->field_40 = 8;
-    info->m_nPrice = 83375;
-    info->field_48 = 25;
-    info->m_nEffect = 300;
-    info->m_nPropertyOne = 26;
-    info->m_nLoadingSpeed = 16000;
-    info->m_nPropertyTwo = 27;
-    info->m_nBoostDuration = 10000;
-    info->m_nPropertyThree = 44;
-    info->field_64 = 0;
-    info->m_nPropertyFour = 45;
-    info->field_6C = 107;
-    
-    //iteminfoarr->data = iteminfo;
-    newitem->m_pItemInfo = iteminfoarr;
-
-    new_array->data[196] = newitem;
+    for (int i = 0; i < (int)Item::created_items.size(); i++) {
+        SingleItem* item = (SingleItem*)AbyssEngine::memory_allocate(sizeof(SingleItem));        
+        *item = Item::created_items[i].item;        
+        new_array->data[old_array->size + i] = item;
+    }
     itemsarray->items = new_array;
     // I'm not freeing old_array->data[i]->m_pItemInfo array because I did a memcpy of old array to new array and I don't want to realloc every item info it's kinda useless
     AbyssEngine::memory_free(old_array->data);
-    AbyssEngine::memory_free(old_array);
+    AbyssEngine::memory_free(old_array);    
 }
 
 void Hooks::injectsystemsandstations()
@@ -224,8 +170,8 @@ uintptr_t __stdcall Hooks::globals_init_hook(uintptr_t a, uintptr_t b, uintptr_t
         called_once = true;
         CreateThread(nullptr, 0, [](LPVOID)->DWORD {
             Patches::patchmissions(100);
+            Hooks::injectitems();
             Hooks::injectsystemsandstations();
-            //Hooks::injectitems();
             return 0;
         }, nullptr, 0, nullptr);
     }
@@ -253,6 +199,108 @@ void __fastcall Hooks::abyssengine_paintcanvas_setcolor_hook(uintptr_t paintcanv
     }
 }
 
+AEString* __fastcall Hooks::gametext_gettext_hook()
+{
+    void* returnaddr = nullptr;
+    int id;
+
+    __asm {
+        mov id, eax
+        mov edx, [ebp + 4]
+        mov returnaddr, edx
+    }
+    // The return addresses of every GameText::GetText() items name, useful to not overwrite in others strings
+    // TODO: find in game npc cargo hold returnaddr 
+    if ((uintptr_t)returnaddr == 0x483331 || (uintptr_t)returnaddr == 0x454c4e || (uintptr_t)returnaddr == 0x44edae || (uintptr_t)returnaddr == 0x4c9725 || (uintptr_t)returnaddr == 0x4cc0bc || (uintptr_t)returnaddr == 0x48d8b1) {
+        for (const auto& item : Item::created_items) {
+            if (id == item.id + 1247) { // + 1247 bcz the game decided so don't ask my why
+                static AEString customstring;
+                customstring.text = const_cast<wchar_t*>(item.name.c_str());
+                customstring.size = (uint32_t)item.name.length();
+                return &customstring;
+            }
+        }
+    }
+    // if ((uintptr_t)returnaddr == 0x45565e) { -- for ships names
+    if ((uintptr_t)returnaddr == 0x48307b) {
+        for (const auto& item : Item::created_items) {
+            if (id == item.id + 1014) { // + 1014 bcz the game decided
+                static AEString customstring;
+                customstring.text = const_cast<wchar_t*>(item.description.c_str());
+                customstring.size = (uint32_t)item.description.length();
+                return &customstring;
+            }
+        }
+    }
+    __asm {
+        mov eax, id
+        call old_gametextgettext
+    }
+}
+
+int __stdcall Hooks::recordhandler_recordstorewrite_hook(uintptr_t a, int b)
+{
+    // This function is useful to prevent custom items being injected in the save resulting in a crash at load...
+    Globals_status** globals_status_ptr = (Globals_status**)0x0060AD6C;
+    Globals_status* globals_status = *globals_status_ptr;
+    int oldsize = 196;
+
+    if (Item::created_items.size() == 0)
+        return old_recordhandlerrecordstorewrite(a, b);
+    if (globals_status->m_pItemLowestPrices && globals_status->m_pItemLowestPrices->size > oldsize) {
+        AEArray<unsigned int>* oldarray = globals_status->m_pItemLowestPrices;
+        AEArray<unsigned int>* newarray = (AEArray<unsigned int>*)AbyssEngine::memory_allocate(sizeof(AEArray<unsigned int>));
+
+        newarray->size = oldsize;
+        newarray->size2 = oldsize;
+        newarray->data = (unsigned int*)AbyssEngine::memory_allocate(sizeof(unsigned int) * oldsize);
+        memcpy(newarray->data, oldarray->data, sizeof(unsigned int) * oldsize);
+        globals_status->m_pItemLowestPrices = newarray;
+        AbyssEngine::memory_free(oldarray->data);
+        AbyssEngine::memory_free(oldarray);
+    }
+    if (globals_status->m_pItemHighestPrices && globals_status->m_pItemHighestPrices->size > oldsize) {
+        AEArray<unsigned int>* oldarray = globals_status->m_pItemHighestPrices;
+        AEArray<unsigned int>* newarray = (AEArray<unsigned int>*)AbyssEngine::memory_allocate(sizeof(AEArray<unsigned int>));
+
+        newarray->size = oldsize;
+        newarray->size2 = oldsize;
+        newarray->data = (unsigned int*)AbyssEngine::memory_allocate(sizeof(unsigned int) * oldsize);
+        memcpy(newarray->data, oldarray->data, sizeof(unsigned int) * oldsize);
+        globals_status->m_pItemHighestPrices = newarray;
+        AbyssEngine::memory_free(oldarray->data);
+        AbyssEngine::memory_free(oldarray);
+    }
+    if (globals_status->m_pItemLowestPricesSystem && globals_status->m_pItemLowestPricesSystem->size > oldsize) {
+        AEArray<unsigned int>* oldarray = globals_status->m_pItemLowestPricesSystem;
+        AEArray<unsigned int>* newarray = (AEArray<unsigned int>*)AbyssEngine::memory_allocate(sizeof(AEArray<unsigned int>));
+
+        newarray->size = oldsize;
+        newarray->size2 = oldsize;
+        newarray->data = (unsigned int*)AbyssEngine::memory_allocate(sizeof(unsigned int) * oldsize);
+        memcpy(newarray->data, oldarray->data, sizeof(unsigned int) * oldsize);
+        globals_status->m_pItemLowestPricesSystem = newarray;
+        AbyssEngine::memory_free(oldarray->data);
+        AbyssEngine::memory_free(oldarray);
+        }
+    if (globals_status->m_pItemHighestPricesSystem && globals_status->m_pItemHighestPricesSystem->size > oldsize) {
+        AEArray<unsigned int>* oldarray = globals_status->m_pItemHighestPricesSystem;
+        AEArray<unsigned int>* newarray = (AEArray<unsigned int>*)AbyssEngine::memory_allocate(sizeof(AEArray<unsigned int>));
+
+        newarray->size = oldsize;
+        newarray->size2 = oldsize;
+        newarray->data = (unsigned int*)AbyssEngine::memory_allocate(sizeof(unsigned int) * oldsize);
+        memcpy(newarray->data, oldarray->data, sizeof(unsigned int) * oldsize);
+        globals_status->m_pItemHighestPricesSystem = newarray;
+        AbyssEngine::memory_free(oldarray->data);
+        AbyssEngine::memory_free(oldarray);
+    }
+
+    int result = old_recordhandlerrecordstorewrite(a, b); // actual save
+    Item::refreshitemsprices(); // restore array
+    return result;
+}
+
 void Hooks::init()
 {
     MH_Initialize();
@@ -261,5 +309,7 @@ void Hooks::init()
     MH_CreateHook((LPVOID)FILEREAD_LOADSTATIONBIRARY, &fileread_loadstationbinary_hook, (LPVOID*)&old_filereadloadstationbinary);
     //MH_CreateHook((LPVOID)STANDING_ISENEMY, &standing_isenemy_hook, (LPVOID*)&old_standingisenemy);
     MH_CreateHook((LPVOID)ABYSSENGINE_PAINTCANVAS_SETCOLOR, &abyssengine_paintcanvas_setcolor_hook, (LPVOID*)&old_abyssenginepaintcanvassetcolor);
+    MH_CreateHook((LPVOID)GAMETEXT_GETTEXT, &gametext_gettext_hook, (LPVOID*)&old_gametextgettext);
+    MH_CreateHook((LPVOID)RECORDHANDLER_RECORDSTOREWRITE, &recordhandler_recordstorewrite_hook, (LPVOID*)&old_recordhandlerrecordstorewrite);
     MH_EnableHook(MH_ALL_HOOKS);
 }

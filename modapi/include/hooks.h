@@ -11,6 +11,8 @@ class Hooks {
         static constexpr uintptr_t FILEREAD_LOADSTATIONBIRARY = 0x408C4B;
         static constexpr uintptr_t STANDING_ISENEMY = 0x4CE34B;
         static constexpr uintptr_t ABYSSENGINE_PAINTCANVAS_SETCOLOR = 0x4EC3E0;
+        static constexpr uintptr_t GAMETEXT_GETTEXT = 0x4F38B0;
+        static constexpr uintptr_t RECORDHANDLER_RECORDSTOREWRITE = 0x004BF40C;
 
         using globals_init = uintptr_t (__stdcall*)(uintptr_t, uintptr_t, uintptr_t);
         static globals_init oldglobals_init;
@@ -31,6 +33,14 @@ class Hooks {
         using abyssengine_paintcanvas_setcolor = void (__fastcall*)(uintptr_t paintcanvas);
         static abyssengine_paintcanvas_setcolor old_abyssenginepaintcanvassetcolor;
         static void __fastcall abyssengine_paintcanvas_setcolor_hook(uintptr_t paintcanvas);
+
+        using gametext_gettext = AEString* (__fastcall*)(void);
+        static gametext_gettext old_gametextgettext;
+        static AEString* __fastcall gametext_gettext_hook(void);
+
+        using recordhandler_recordstorewrite = int (__stdcall*)(uintptr_t a, int b);
+        static recordhandler_recordstorewrite old_recordhandlerrecordstorewrite;
+        static int __stdcall recordhandler_recordstorewrite_hook(uintptr_t a, int b);
 
         static void injectsystemsandstations(void);
         static void injectitems(void);

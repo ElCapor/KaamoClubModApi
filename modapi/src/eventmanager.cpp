@@ -36,8 +36,8 @@ void EventManager::joingame_event()
     static bool joinedgame = false;
 
     if (!joinedgame && (*globals_appmanager)->m_nCurrentModule != 1 && (*globals_appmanager)->m_nCurrentModule != 0) {
+        Item::refreshitemsprices();
         joinedgame = true;
-        //ModApiUtils::refreshitemsprices();
         trigger("OnJoinGame");
     }
     if (joinedgame && (*globals_appmanager)->m_nCurrentModule == 1)

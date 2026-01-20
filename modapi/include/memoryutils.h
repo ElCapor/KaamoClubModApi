@@ -19,6 +19,7 @@
 #include <Game/station.h>
 #include <Game/mission.h>
 #include <Game/asset.h>
+#include <Game/item.h>
 
 class MemoryUtils {
     public:

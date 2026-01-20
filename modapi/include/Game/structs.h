@@ -39,15 +39,17 @@ struct ItemInfo {
     int field_40;
     int m_nPrice;
     int field_48;
-    int m_nEffect;
-    int m_nPropertyOne; // uh weird
-    int m_nLoadingSpeed;
+    int field_4C;
+    int m_nPropertyOne;
+    int m_nPropertyOneValue;
     int m_nPropertyTwo;
-    int m_nBoostDuration;
+    int m_nPropertyTwoValue;
     int m_nPropertyThree;
-    int field_64;
+    int m_nPropertyThreeValue;
     int m_nPropertyFour;
-    int field_6C;
+    int m_nPropertyFourValue;
+    int field_70;
+    int field_74;
 };
 
 struct SingleItem {

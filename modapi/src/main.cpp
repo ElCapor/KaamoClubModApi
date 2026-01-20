@@ -27,6 +27,7 @@ DWORD WINAPI MainThread(LPVOID lpParam) {
     Station::init();
     Mission::init();
     Asset::init();
+    //Item::init();
     while (true)
         EventManager::trigger_events();
 

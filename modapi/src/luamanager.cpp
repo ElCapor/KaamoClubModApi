@@ -136,16 +136,23 @@ void LuaManager::bind_api()
         }
     );
 
+    lua_state.new_usertype<Item>("Item",
+        sol::no_constructor,
+        "Create", [](Asset& self, const std::string& name, const std::string& description) -> int {
+            return Item::create(name, description);
+        }
+    );
+
     lua_state.set_function("RegisterEvent", [&](std::string name, sol::protected_function callback) {
         EventManager::addlistener(name, callback);
     });
 
-    lua_state["API_VERSION"] = "1.0";
     lua_state["player"] = Player();
     lua_state["system"] = System();
     lua_state["mission"] = Mission();
     lua_state["station"] = Station();
     lua_state["asset"] = Asset();
+    lua_state["item"] = Item();
 }
 
 void LuaManager::execute_script(const std::string& filepath)
