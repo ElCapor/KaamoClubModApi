@@ -211,8 +211,8 @@ AEString* __fastcall Hooks::gametext_gettext_hook()
         mov returnaddr, edx
     }
     // The return addresses of every GameText::GetText() items name, useful to not overwrite in others strings
-    // TODO: find in game npc cargo hold returnaddr 
-    if ((uintptr_t)returnaddr == 0x483331 || (uintptr_t)returnaddr == 0x454c4e || (uintptr_t)returnaddr == 0x44edae || (uintptr_t)returnaddr == 0x4c9725 || (uintptr_t)returnaddr == 0x4cc0bc || (uintptr_t)returnaddr == 0x48d8b1) {
+    // TODO: find in game npc cargo hold returnaddr
+    if ((uintptr_t)returnaddr == 0x483331 || (uintptr_t)returnaddr == 0x454c4e || (uintptr_t)returnaddr == 0x44edae || (uintptr_t)returnaddr == 0x4c9725 || (uintptr_t)returnaddr == 0x4cc0bc || (uintptr_t)returnaddr == 0x48d8b1 || (uintptr_t)returnaddr == 0x458618 || (uintptr_t)returnaddr == 0x4585C1) {
         for (const auto& item : Item::created_items) {
             if (id == item.id + 1247) { // + 1247 bcz the game decided so don't ask my why
                 static AEString customstring;
