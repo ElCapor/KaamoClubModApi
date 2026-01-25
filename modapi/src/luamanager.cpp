@@ -138,8 +138,8 @@ void LuaManager::bind_api()
 
     lua_state.new_usertype<Item>("Item",
         sol::no_constructor,
-        "Create", [](Asset& self, const std::string& name, const std::string& description) -> int {
-            return Item::create(name, description);
+        "Create", [](Asset& self, const std::string& name, const std::string& description, sol::table iteminfo) -> int {
+            return Item::create(name, description, iteminfo);
         }
     );
 

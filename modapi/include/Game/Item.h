@@ -26,16 +26,22 @@
 
 class Item {
     private:
-        struct ModdedItems {
+        struct ModdedItem {
             int id;
+            std::string type;
             std::wstring name;
             std::wstring description;
             SingleItem item;
         };
     public:
-        static inline std::vector<ModdedItems> created_items;
-        static int create(const std::string& name, const std::string& description);
+        static inline std::vector<ModdedItem> created_items;
+        static int create(const std::string& name, const std::string& description, sol::table iteminfo);
         static void edit(void);
+
         static void refreshitemsprices(void);
+        static void create_gun_item(ModdedItem m, int damage, int loadingspeed, int range, int speed);
+        static void create_booster_item(ModdedItem m, int boostduration, int loadingspeed, int effect);
+        static void create_cloak_item(ModdedItem m, int effect, int loadingspeed, int energyconsumption);
+        static void create_commodity_item(ModdedItem m);
 };
 #endif

@@ -22,7 +22,7 @@ struct Vector3Int {
 struct ItemInfo {
     int field_0;
     int m_nID;
-    int m_bIsThermo; // uh weird
+    int m_bIsThermo; // uh weird 1=not thermo sooo yeah...
     int m_nType;
     int field_10;
     int m_nSubType;
@@ -38,8 +38,6 @@ struct ItemInfo {
     int field_3C;
     int field_40;
     int m_nPrice;
-    int field_48;
-    int field_4C;
     int m_nPropertyOne;
     int m_nPropertyOneValue;
     int m_nPropertyTwo;
@@ -48,28 +46,31 @@ struct ItemInfo {
     int m_nPropertyThreeValue;
     int m_nPropertyFour;
     int m_nPropertyFourValue;
+    int m_nPropertyFive;
+    int m_nPropertyFiveValue;
     int field_70;
     int field_74;
 };
 
 struct SingleItem {
-   int m_nID;
-   int m_nType;
-   int m_nSubType;
-   int m_nTechLevel;
-   int m_nLowestPriceSystemId;
-   int m_nHighestPriceSystemId;
-   int m_nPrice;
-   int m_nOccurance;
-   int m_nMinPrice;
-   int m_nMaxPrice;
-   int m_nAmount;
-   int m_nStationAmount;
-   AEArray<ItemInfo>* m_pItemInfo;
-   int field_34;
-   int field_38;
-   int field_3C;
-   int field_40;
+    int m_nID;
+    int m_nType;
+    int m_nSubType;
+    int m_nTechLevel;
+    int m_nLowestPriceSystemId;
+    int m_nHighestPriceSystemId;
+    int m_nPrice;
+    int m_nOccurance;
+    int m_nMinPrice;
+    int m_nMaxPrice;
+    int m_nAmount;
+    int m_nStationAmount;
+    AEArray<ItemInfo>* m_pItemInfo;
+    int field_34;
+    int field_38;
+    int field_3C;
+    int field_40;
+    int m_bDisableSelling;
 };
 
 struct SingleSystem {

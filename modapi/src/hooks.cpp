@@ -12,6 +12,7 @@ Hooks::standing_isenemy Hooks::old_standingisenemy = nullptr;
 Hooks::abyssengine_paintcanvas_setcolor Hooks::old_abyssenginepaintcanvassetcolor = nullptr;
 Hooks::gametext_gettext Hooks::old_gametextgettext = nullptr;
 Hooks::recordhandler_recordstorewrite Hooks::old_recordhandlerrecordstorewrite = nullptr;
+Hooks::level_creategun Hooks::old_levelcreategun = nullptr;
 
 void Hooks::injectitems()
 {
@@ -282,7 +283,7 @@ int __stdcall Hooks::recordhandler_recordstorewrite_hook(uintptr_t a, int b)
         globals_status->m_pItemLowestPricesSystem = newarray;
         AbyssEngine::memory_free(oldarray->data);
         AbyssEngine::memory_free(oldarray);
-        }
+    }
     if (globals_status->m_pItemHighestPricesSystem && globals_status->m_pItemHighestPricesSystem->size > oldsize) {
         AEArray<unsigned int>* oldarray = globals_status->m_pItemHighestPricesSystem;
         AEArray<unsigned int>* newarray = (AEArray<unsigned int>*)AbyssEngine::memory_allocate(sizeof(AEArray<unsigned int>));
@@ -301,6 +302,21 @@ int __stdcall Hooks::recordhandler_recordstorewrite_hook(uintptr_t a, int b)
     return result;
 }
 
+int __stdcall Hooks::level_creategun_hook(int a1, int a2, int a3, int a4, int a5, int a6, int a7, int a8, int a9)
+{
+    for (int i = 0; i < (int)Item::created_items.size(); i++) {
+        if (Item::created_items[i].item.m_nID == a2 && Item::created_items[i].type == "Laser") {
+            a2 = 0;
+        } else if (Item::created_items[i].item.m_nID == a2 && Item::created_items[i].type == "LaserBeam") {
+            a2 = 10;
+            a8 = Item::created_items[i].item.m_pItemInfo->data->m_nPropertyFourValue;
+        } else if (Item::created_items[i].item.m_nID == a2 && Item::created_items[i].type == "Blaster") {
+            a2 = 21;
+        }
+    }
+    return old_levelcreategun(a1, a2, a3, a4, a5, a6, a7, a8, a9);
+}
+
 void Hooks::init()
 {
     MH_Initialize();
@@ -311,5 +327,6 @@ void Hooks::init()
     MH_CreateHook((LPVOID)ABYSSENGINE_PAINTCANVAS_SETCOLOR, &abyssengine_paintcanvas_setcolor_hook, (LPVOID*)&old_abyssenginepaintcanvassetcolor);
     MH_CreateHook((LPVOID)GAMETEXT_GETTEXT, &gametext_gettext_hook, (LPVOID*)&old_gametextgettext);
     MH_CreateHook((LPVOID)RECORDHANDLER_RECORDSTOREWRITE, &recordhandler_recordstorewrite_hook, (LPVOID*)&old_recordhandlerrecordstorewrite);
+    MH_CreateHook((LPVOID)LEVEL_CREATEGUN, &level_creategun_hook, (LPVOID*)&old_levelcreategun);
     MH_EnableHook(MH_ALL_HOOKS);
 }

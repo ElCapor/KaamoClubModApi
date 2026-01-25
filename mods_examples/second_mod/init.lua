@@ -18,9 +18,19 @@ RegisterEvent("EarlyInit", function()
 	local stationid2 = station:Create("test 2", 1, 3, systemid)
 	local stationid3 = station:Create("test 3", 2, 2, systemid)
 	local stationid4 = station:Create("test 4", 3, 1, systemid)
-	local myitem = item:Create("my test item", "cool description")
+	testitem = {
+	type = "Laser",
+	techlevel = 9,
+	baseprice = 1234,
+	minprice = 12,
+	maxprice = 1234,
+	damage = 120,
+	loadingspeed = 1300,
+	range = 1000,
+	speed = 3000
+	}
+	local myitem = item:Create("my test item", "cool description", testitem)
 	print("my test item id: " .. myitem)
-	item:Create("super cool item", "i told you it was a super cool item")
 	--print("Made station id : " .. stationid)
 	--print("Made station id : " .. stationid2)
 	--print("Made station id : " .. stationid3)

@@ -12,7 +12,8 @@ class Hooks {
         static constexpr uintptr_t STANDING_ISENEMY = 0x4CE34B;
         static constexpr uintptr_t ABYSSENGINE_PAINTCANVAS_SETCOLOR = 0x4EC3E0;
         static constexpr uintptr_t GAMETEXT_GETTEXT = 0x4F38B0;
-        static constexpr uintptr_t RECORDHANDLER_RECORDSTOREWRITE = 0x004BF40C;
+        static constexpr uintptr_t RECORDHANDLER_RECORDSTOREWRITE = 0x4BF40C;
+        static constexpr uintptr_t LEVEL_CREATEGUN = 0x4695CB;
 
         using globals_init = uintptr_t (__stdcall*)(uintptr_t, uintptr_t, uintptr_t);
         static globals_init oldglobals_init;
@@ -41,6 +42,10 @@ class Hooks {
         using recordhandler_recordstorewrite = int (__stdcall*)(uintptr_t a, int b);
         static recordhandler_recordstorewrite old_recordhandlerrecordstorewrite;
         static int __stdcall recordhandler_recordstorewrite_hook(uintptr_t a, int b);
+
+        using level_creategun = int (__stdcall*)(int a1, int a2, int a3, int a4, int a5, int a6, int a7, int a8, int a9);
+        static level_creategun old_levelcreategun;
+        static int __stdcall level_creategun_hook(int a1, int a2, int a3, int a4, int a5, int a6, int a7, int a8, int a9);
 
         static void injectsystemsandstations(void);
         static void injectitems(void);
